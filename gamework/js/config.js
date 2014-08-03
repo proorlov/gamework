@@ -6,6 +6,7 @@ var manifest = [
 var config = {
     font: "Arial",
     debug: true, //fps and some console logs
-    showTime: true,
-    gameTime: 3000
+    needTime: true,
+    startTime: 3000,
+    gameTime: 5000
 };
