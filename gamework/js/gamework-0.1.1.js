@@ -12,11 +12,11 @@ var gamework = new function() {
     var h = 794;
     var w2 = w - borderSize * 2;
     var h2 = h - borderSize * 2;
-    var sysScreen, sysScreenA, sysScreenB, startButton;
+    var sysScreen, sysScreenA, sysScreenB, buttons, startButton;
     //api
-    var how = false;
-    var pause = false;
-    var mute = false;
+    var howState = false;
+    var pauseState = false;
+    var muteState = false;
     //run
     var timerRun = false;
     var gamingTime = 0;
@@ -32,23 +32,27 @@ var gamework = new function() {
         queue.loadManifest(manifest);
     }
     this.how = function() {
-        how = !how;
-        return how;
+        howState = !howState;
+        return howState;
     }
     this.pause = function() {
+        return pauseClick();
+    }
+    this.mute = function() {
+        muteState = !muteState;
+        return muteState;
+    }
+
+    function pauseClick() {
         if (timerRun) {
-            pause = !pause;
-            if (pause) {
+            pauseState = !pauseState;
+            if (pauseState) {
                 showSystemScreen(true);
             } else {
                 showSystemScreen(false);
             }
         }
-        return pause;
-    }
-    this.mute = function() {
-        mute = !mute;
-        return mute;
+        return pauseState;
     }
 
     function start() {
@@ -64,11 +68,16 @@ var gamework = new function() {
         createjs.Ticker.addEventListener("tick", tickHandler);
     }
     function startGame() {
-        timerRun = true;
-        showSystemScreen(false);
+        if (pauseState) {
+            pauseClick();
+        } else {
+            gamingTime = 0;
+            timerRun = true;
+            showSystemScreen(false);
+        }
     }
     function tickHandler(tick) {
-        if (timerRun && !pause) {
+        if (timerRun && !pauseState) {
             //console.log(createjs.Ticker.getTime(true));
             gamingTime += tick.delta;
             if (config.showTime == false || gamingTime < config.gameTime) {
@@ -117,14 +126,19 @@ var gamework = new function() {
         sysScreenA.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(0, 0, w2/2, h2);
         sysScreenB = new createjs.Shape;
         sysScreenB.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(w2/2, 0, w2/2, h2);
+        buttons = new createjs.Container;
         startButton = new createjs.Container;
-        startButton.addChild(new createjs.Bitmap(queue.getResult("button")));
+        var fon = new createjs.Bitmap(queue.getResult("button"));
+        var txt = new createjs.Text("START", "36px "+config.font, "#4A4A4A");
+        txt.setTransform(100, 17);
+        startButton.addChild(fon, txt);
         startButton.setTransform(w/2 - startButton.getBounds().width/2, h/2 - startButton.getBounds().height/2);
         startButton.cursor = "pointer";
         startButton.on("mousedown", function() {
             startGame();
         });
-        sysScreen.addChild(sysScreenA, sysScreenB, startButton);
+        buttons.addChild(startButton);
+        sysScreen.addChild(sysScreenA, sysScreenB, buttons);
         stage.addChild(sysScreen);
     }
     function showSystemScreen(show) {
@@ -134,9 +148,12 @@ var gamework = new function() {
             sysScreen.visible = true;
             workstage.visible = false;
             createjs.Tween.get(sysScreenA).to({x:0}, t);
-            createjs.Tween.get(sysScreenB).to({x:0}, t);
+            createjs.Tween.get(sysScreenB).to({x:0}, t).call(function() {
+                buttons.visible = true;
+            });
         } else {
             //console.log('showSystemFade(false)');
+            buttons.visible = false;
             createjs.Tween.get(sysScreenA).to({x:-w2/2}, t);
             createjs.Tween.get(sysScreenB).to({x:w2/2}, t).call(function() {
                 sysScreen.visible = false;
