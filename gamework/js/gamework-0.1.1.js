@@ -7,9 +7,12 @@ var gamework = new function() {
     var fpsLabel;
     var timeLabel;
     var timeCircle;
+    var borderSize = 12;
     var w = 1248;
     var h = 794;
-    var sysScreen;
+    var w2 = w - borderSize * 2;
+    var h2 = h - borderSize * 2;
+    var sysScreen, sysScreenA, sysScreenB;
     //api
     var how = false;
     var pause = false;
@@ -35,11 +38,9 @@ var gamework = new function() {
         if (timerRun) {
             pause = !pause;
             if (pause) {
-                sysScreen.visible = true;
-                workstage.visible = false;
+                showSystemScreen(true);
             } else {
-                sysScreen.visible = false;
-                workstage.visible = true;
+                showSystemScreen(false);
             }
         }
         return pause;
@@ -96,8 +97,7 @@ var gamework = new function() {
     }
     function stop(){
         console.log('stop');
-        sysScreen.visible = true;
-        workstage.visible = false;
+        showSystemScreen(true);
     }
 
     function paintBackground() {
@@ -106,25 +106,40 @@ var gamework = new function() {
         stage.addChild(background);
     }
     function paintSystemScreen() {
-        var size = 12;
         sysScreen = new createjs.Container;
-        sysScreen.setTransform(size, size);
-        var w2 = w - size * 2;
-        var h2 = h - size * 2;
-        var sysScreenA = new createjs.Shape;
+        sysScreen.setTransform(borderSize, borderSize);
+        sysScreenA = new createjs.Shape;
         sysScreenA.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(0, 0, w2/2, h2);
-        var sysScreenB = new createjs.Shape;
+        sysScreenA.setTransform(-w2/2, 0);
+        sysScreenB = new createjs.Shape;
         sysScreenB.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(w2/2, 0, w2/2, h2);
+        sysScreenB.setTransform(w2/2, 0);
         sysScreen.addChild(sysScreenA, sysScreenB);
         sysScreen.visible = false;
         stage.addChild(sysScreen);
     }
+    function showSystemScreen(show) {
+        var t = 200;
+        if (show) {
+            //console.log('showSystemFade(true)');
+            sysScreen.visible = true;
+            workstage.visible = false;
+            createjs.Tween.get(sysScreenA).to({x:0}, t);
+            createjs.Tween.get(sysScreenB).to({x:0}, t);
+        } else {
+            //console.log('showSystemFade(false)');
+            createjs.Tween.get(sysScreenA).to({x:-w2/2}, t);
+            createjs.Tween.get(sysScreenB).to({x:w2/2}, t).call(function() {
+                sysScreen.visible = false;
+                workstage.visible = true;
+            });
+        }
+    }
     function paintBorder() {
         var border = new createjs.Shape;
-        var size = 12;
         var color = "#4A4A4A";
-        border.graphics.setStrokeStyle(size).beginStroke(color);
-        border.graphics.drawRoundRect(size/2, size/2, w - size, h - size, 1);
+        border.graphics.setStrokeStyle(borderSize).beginStroke(color);
+        border.graphics.drawRoundRect(borderSize/2, borderSize/2, w - borderSize, h - borderSize, 1);
         border.graphics.endStroke();
         border.cache(0, 0, w, h);
         stage.addChild(border);

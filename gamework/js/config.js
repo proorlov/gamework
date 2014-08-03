@@ -6,5 +6,5 @@ var config = {
     font: "Arial",
     debug: true, //fps and some console logs
     showTime: true,
-    gameTime: 60000
+    gameTime: 3000
 };
