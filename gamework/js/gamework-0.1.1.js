@@ -12,7 +12,8 @@ var gamework = new function() {
     var h = 794;
     var w2 = w - borderSize * 2;
     var h2 = h - borderSize * 2;
-    var sysScreen, sysScreenA, sysScreenB, countDown, buttons, startButton;
+    var sysScreen, sysScreenA, sysScreenB, countDown, pauseButtons, workoutButton, replayButton, resumeButton;
+    var points = 0;
     //api
     var howState = false;
     var pauseState = false;
@@ -71,13 +72,20 @@ var gamework = new function() {
         //timerRun = true;
         createjs.Ticker.addEventListener("tick", tickHandler);
     }
+    function restartGame() {
+        started = false;
+        pauseState = false;
+        downCounter = config.startTime;
+        gamingTime = 0;
+        pauseButtons.visible = false;
+    }
     function startGame() {
-        if (pauseState) {
-            pauseClick();
-        } else {
-            started = false;
-            downCounter = config.startTime;
-            startButton.visible = false;
+        if (!started) {
+            started = true;
+            pauseButtons.visible = true;
+            gamingTime = 0;
+            timerRun = true;
+            showSystemScreen(false);
         }
     }
     function tickHandler(tick) {
@@ -85,13 +93,7 @@ var gamework = new function() {
             downCounter -= tick.delta;
             updateCounter();
         } else {
-            if (!started) {
-                started = true;
-                startButton.visible = true;
-                gamingTime = 0;
-                timerRun = true;
-                showSystemScreen(false);
-            }
+            startGame();
         }
         if (timerRun && !pauseState) {
             //console.log(createjs.Ticker.getTime(true));
@@ -103,12 +105,12 @@ var gamework = new function() {
                 //time finished
                 updateTimer(config.gameTime);
                 timerRun = false;
-                stop();
+                gameOver();
             }
         }
         if (!timerRun && gamingTime >= config.gameTime && !sysScreen.visible) {
             //fix if pause
-            stop();
+            gameOver();
         }
         if (config.debug) {
             fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
@@ -137,8 +139,8 @@ var gamework = new function() {
             countDown.text = "";
         }
     }
-    function stop(){
-        console.log('stop');
+    function gameOver(){
+        console.log('gameOver');
         showSystemScreen(true);
     }
 
@@ -151,25 +153,57 @@ var gamework = new function() {
         sysScreen = new createjs.Container;
         sysScreen.setTransform(borderSize, borderSize);
         sysScreenA = new createjs.Shape;
-        sysScreenA.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(0, 0, w2/2, h2);
+        sysScreenA.graphics.beginFill("rgba(0,0,0,0.5)").drawRect(0, 0, w2/2, h2);
         sysScreenB = new createjs.Shape;
-        sysScreenB.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(w2/2, 0, w2/2, h2);
-        countDown = new createjs.Text(Math.floor(downCounter/1000), "200px "+config.font, "#FFFFFF");
-        countDown.setTransform(w/2 - countDown.getBounds().width/2, h/3 - countDown.getBounds().height/2);
-        buttons = new createjs.Container;
-        startButton = new createjs.Container;
+        sysScreenB.graphics.beginFill("rgba(0,0,0,0.5)").drawRect(w2/2, 0, w2/2, h2);
+        countDown = new createjs.Text("", "250px "+config.font2_semibold, "#FFFFFF");
+        countDown.textAlign = "center";
+        countDown.textBaseline = "alphabetic";
+        countDown.setTransform(w/2, h/2);
+        pauseButtons = new createjs.Container;
+        pauseButtons.visible = false;
+        //buttons        
+        workoutButton = new createjs.Container;
         var fon = new createjs.Bitmap(queue.getResult("button"));
-        var txt = new createjs.Text("START", "36px "+config.font, "#4A4A4A");
-        txt.setTransform(100, 17);
-        startButton.addChild(fon, txt);
-        startButton.setTransform(w/2 - startButton.getBounds().width/2, h/2 - startButton.getBounds().height/2);
-        startButton.cursor = "pointer";
-        startButton.on("mousedown", function() {
-            startGame();
+        var txt = new createjs.Text("BACK TO WORKOUT", "30px "+config.font2_reg, "#4A4A4A");
+        txt.lineWidth = 327;
+        txt.textAlign = "center";
+        txt.textBaseline = "alphabetic";
+        txt.setTransform(163, 47);
+        workoutButton.addChild(fon, txt);
+        workoutButton.setTransform(100, h/2 - workoutButton.getBounds().height/2);
+        workoutButton.cursor = "pointer";
+        workoutButton.on("mousedown", function() {
+            console.log("back to workout");
         });
-        startButton.visible = false;
-        buttons.addChild(countDown, startButton);
-        sysScreen.addChild(sysScreenA, sysScreenB, buttons);
+        replayButton = new createjs.Container;
+        var fon = new createjs.Bitmap(queue.getResult("button"));
+        var txt = new createjs.Text("REPLAY", "30px "+config.font2_reg, "#4A4A4A");
+        txt.lineWidth = 327;
+        txt.textAlign = "center";
+        txt.textBaseline = "alphabetic";
+        txt.setTransform(163, 47);
+        replayButton.addChild(fon, txt);
+        replayButton.setTransform(w/2 - replayButton.getBounds().width/2, h/2 - replayButton.getBounds().height/2);
+        replayButton.cursor = "pointer";
+        replayButton.on("mousedown", function() {
+            restartGame();
+        });
+        resumeButton = new createjs.Container;
+        var fon = new createjs.Bitmap(queue.getResult("button_green"));
+        var txt = new createjs.Text("RESUME", "30px "+config.font2_reg, "#F1F1F1");
+        txt.lineWidth = 327;
+        txt.textAlign = "center";
+        txt.textBaseline = "alphabetic";
+        txt.setTransform(163, 47);
+        resumeButton.addChild(fon, txt);
+        resumeButton.setTransform(w - 429, h/2 - resumeButton.getBounds().height/2);
+        resumeButton.cursor = "pointer";
+        resumeButton.on("mousedown", function() {
+            pauseClick();
+        });
+        pauseButtons.addChild(workoutButton, replayButton, resumeButton);
+        sysScreen.addChild(sysScreenA, sysScreenB, countDown, pauseButtons);
         stage.addChild(sysScreen);
     }
     function showSystemScreen(show) {
@@ -180,11 +214,11 @@ var gamework = new function() {
             workstage.visible = false;
             createjs.Tween.get(sysScreenA).to({x:0}, t);
             createjs.Tween.get(sysScreenB).to({x:0}, t).call(function() {
-                buttons.visible = true;
+                pauseButtons.visible = true;
             });
         } else {
             //console.log('showSystemFade(false)');
-            buttons.visible = false;
+            pauseButtons.visible = false;
             createjs.Tween.get(sysScreenA).to({x:-w2/2}, t);
             createjs.Tween.get(sysScreenB).to({x:w2/2}, t).call(function() {
                 sysScreen.visible = false;
@@ -210,10 +244,11 @@ var gamework = new function() {
     }
     function showTime() {
         if (config.needTime) {
-            timeLabel = new createjs.Text("", "bold 36px "+config.font, "#EA5151");
+            timeLabel = new createjs.Text("", "bold 40px "+config.font3_bold, "#EA5151");
             timeLabel.textAlign = "center";
-            timeLabel.x = 103;
-            timeLabel.y = 83;
+            timeLabel.textBaseline = "alphabetic";
+            timeLabel.x = 105;
+            timeLabel.y = 115;
             timeCircle = new createjs.Shape;
             timeCircle.cache(0, 0, 146, 146);
             timeCircle.setTransform(30, 30);
