@@ -22,7 +22,7 @@ var gamework = new function() {
         canvas = document.getElementById("gamework");
         createjs.Ticker.setFPS(30);
         stage = new createjs.Stage(canvas);
-        workstage = new createjs.Container;        
+        workstage = new createjs.Container;
         queue = new createjs.LoadQueue(true);
         queue.addEventListener("complete", start);
         queue.loadManifest(manifest);
@@ -107,8 +107,15 @@ var gamework = new function() {
     }
     function paintSystemScreen() {
         var size = 12;
-        sysScreen = new createjs.Shape;
-        sysScreen.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(size, size, w - size*2, h - size*2);
+        sysScreen = new createjs.Container;
+        sysScreen.setTransform(size, size);
+        var w2 = w - size * 2;
+        var h2 = h - size * 2;
+        var sysScreenA = new createjs.Shape;
+        sysScreenA.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(0, 0, w2/2, h2);
+        var sysScreenB = new createjs.Shape;
+        sysScreenB.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(w2/2, 0, w2/2, h2);
+        sysScreen.addChild(sysScreenA, sysScreenB);
         sysScreen.visible = false;
         stage.addChild(sysScreen);
     }
