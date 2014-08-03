@@ -12,7 +12,7 @@ var gamework = new function() {
     var h = 794;
     var w2 = w - borderSize * 2;
     var h2 = h - borderSize * 2;
-    var sysScreen, sysScreenA, sysScreenB;
+    var sysScreen, sysScreenA, sysScreenB, startButton;
     //api
     var how = false;
     var pause = false;
@@ -25,6 +25,7 @@ var gamework = new function() {
         canvas = document.getElementById("gamework");
         createjs.Ticker.setFPS(30);
         stage = new createjs.Stage(canvas);
+        stage.enableMouseOver(10);
         workstage = new createjs.Container;
         queue = new createjs.LoadQueue(true);
         queue.addEventListener("complete", start);
@@ -59,8 +60,12 @@ var gamework = new function() {
         paintBorder();
         stage.update();
         gamingTime = 0;
-        timerRun = true;
+        //timerRun = true;
         createjs.Ticker.addEventListener("tick", tickHandler);
+    }
+    function startGame() {
+        timerRun = true;
+        showSystemScreen(false);
     }
     function tickHandler(tick) {
         if (timerRun && !pause) {
@@ -110,12 +115,16 @@ var gamework = new function() {
         sysScreen.setTransform(borderSize, borderSize);
         sysScreenA = new createjs.Shape;
         sysScreenA.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(0, 0, w2/2, h2);
-        sysScreenA.setTransform(-w2/2, 0);
         sysScreenB = new createjs.Shape;
         sysScreenB.graphics.beginFill("rgba(0,0,0,0.3)").drawRect(w2/2, 0, w2/2, h2);
-        sysScreenB.setTransform(w2/2, 0);
-        sysScreen.addChild(sysScreenA, sysScreenB);
-        sysScreen.visible = false;
+        startButton = new createjs.Container;
+        startButton.addChild(new createjs.Bitmap(queue.getResult("button")));
+        startButton.setTransform(w/2 - startButton.getBounds().width/2, h/2 - startButton.getBounds().height/2);
+        startButton.cursor = "pointer";
+        startButton.on("mousedown", function() {
+            startGame();
+        });
+        sysScreen.addChild(sysScreenA, sysScreenB, startButton);
         stage.addChild(sysScreen);
     }
     function showSystemScreen(show) {
@@ -153,7 +162,7 @@ var gamework = new function() {
     }
     function showTime() {
         if (config.showTime) {
-            timeLabel = new createjs.Text(config.gameTime/1000, "bold 36px "+config.font, "#EA5151");
+            timeLabel = new createjs.Text("", "bold 36px "+config.font, "#EA5151");
             timeLabel.textAlign = "center";
             timeLabel.x = 103;
             timeLabel.y = 83;

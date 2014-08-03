@@ -1,5 +1,6 @@
 var manifest = [
-    {src: 'gameres/img/background.jpg', id: 'background'}
+    {src: 'gameres/img/background.jpg', id: 'background'},
+    {src: 'gameres/img/button.png', id: 'button'}
 ];
 
 var config = {
