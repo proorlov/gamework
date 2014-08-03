@@ -90,6 +90,10 @@ var gamework = new function() {
                 stop();
             }
         }
+        if (!timerRun && gamingTime >= config.gameTime && !sysScreen.visible) {
+            //fix if pause
+            stop();
+        }
         if (config.debug) {
             fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
         }
