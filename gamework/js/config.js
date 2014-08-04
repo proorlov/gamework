@@ -25,9 +25,9 @@ var config = {
 
     static_objects: [
         {x:   59, y: 244, scale: 1, img: 'home1'},
-        {x:  238, y:  32, scale: 1, img: 'home2'},
-        {x:  487, y: 130, scale: 1, img: 'home3'},
-        {x:  709, y:  32, scale: 1, img: 'home4'},
+        {x:  716, y:  32, scale: 1, img: 'home4'},
+	    {x:  238, y:  32, scale: 1, img: 'home2'},
+        {x:  487, y: 103, scale: 1, img: 'home3'},     
         {x:  880, y: 105, scale: 1, img: 'home5'},
         {x: 1034, y: 244, scale: 1, img: 'home6'},
     ],
