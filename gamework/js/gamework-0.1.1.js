@@ -63,6 +63,7 @@ var gamework = new function() {
     function start() {
         document.getElementById("gameworkLoading").style.display = "none";
         paintBackground();
+        paintStaticObjects();
         stage.addChild(workstage);
         showFPS();
         showTime();
@@ -151,6 +152,14 @@ var gamework = new function() {
         var background = new createjs.Bitmap(queue.getResult("background"));
         background.cache(0, 0, w, h);
         stage.addChild(background);
+    }
+    function paintStaticObjects() {
+        var static_objects = new createjs.Container;
+        for (var i = config.static_objects.length - 1; i >= 0; i--) {
+            var el = new createjs.Bitmap(queue.getResult(config.static_objects[i].img));
+            el.setTransform(config.static_objects[i].x, config.static_objects[i].y, config.static_objects[i].scale, config.static_objects[i].scale);
+            stage.addChild(el);
+        };
     }
     function paintSystemScreen() {
         sysScreen = new createjs.Container;
