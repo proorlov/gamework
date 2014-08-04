@@ -161,6 +161,9 @@ var gamework = new function() {
             stage.addChild(el);
         };
     }
+    function paintDynamicObjects() {
+        //...
+    }
     function paintSystemScreen() {
         sysScreen = new createjs.Container;
         sysScreen.setTransform(borderSize, borderSize);

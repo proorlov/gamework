@@ -31,5 +31,9 @@ var config = {
         {x:  880, y: 105, scale: 1, img: 'home5'},
         {x: 1034, y: 244, scale: 1, img: 'home6'},
     ],
+    
+    dynamic_objects: [
+
+    ],
 
 };
