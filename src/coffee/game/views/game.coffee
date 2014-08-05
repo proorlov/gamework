@@ -6,15 +6,12 @@ define [
 ], (_, Config, Base) ->
   class Game extends Base
     
+    visible: true
+    
     render: ->
-      @paintBackground()
       @paintStaticObjects()
+      @paitnScores()
       @showTime() if Config.needTime
-  
-    paintBackground: ->
-      background = new createjs.Bitmap @game.queue.getResult("background")
-      background.cache(0, 0, @game.w, @game.h)
-      @screen.addChild(background)
       
     paintStaticObjects: (stage) ->
       static_objects = new createjs.Container
@@ -24,7 +21,22 @@ define [
           el = new createjs.Bitmap(@game.queue.getResult(obj.img))
           el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
           @screen.addChild(el)
+
+    paitnScores: ->
+      scoreContainer = new createjs.Container
       
+      shape = new createjs.Shape
+      shape.graphics.beginFill("rgba(0,0,0,0.5)").drawRoundRectComplex(@game.w-@game.borderSize-400, 0, 400, 130, 0, 0, 0, 10);
+      
+      txt = new createjs.Text("Your score: #{@game.points}", "30px "+Config.font2_reg, "#FFF")
+      txt.textAlign = "center"
+      txt.textBaseline = "alphabetic"
+      txt.setTransform(@game.w-@game.borderSize-280, 75)
+      
+      scoreContainer.addChild(shape, txt)
+      @screen.addChild(scoreContainer)
+      
+
     showTime: ->
       @timeLabel = new createjs.Text("", "bold 40px "+Config.font3_bold, "#EA5151")
       @timeLabel.textAlign = "center"
@@ -46,3 +58,9 @@ define [
       @timeCircle.graphics.beginFill("#FFFFFF").drawCircle(73, 73, 38).endFill()
       @timeCircle.graphics.setStrokeStyle(16).beginStroke("#FBFBFB").arc(73, 73, 60, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * time / Config.gameTime)
       @timeCircle.updateCache()
+
+    show: ->
+      @screen.visible = true
+
+    hide: ->
+      @screen.visible = false

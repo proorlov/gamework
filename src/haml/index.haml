@@ -10,9 +10,9 @@
     %script{ data-main: "js/main", src: "/vendor/require.js"}
   %body
     %div.controls{style: "text-align: center;"}
-      %a{href: "#", onclick: "gamework.how();"} how to play
-      %a{href: "#", onclick: "gamework.pause();"} pause
-      %a{href: "#", onclick: "gamework.mute();"} mute
+      %a#htp{href: "#" } how to play
+      %a#pause{href: "#" } pause
+      %a#mute{href: "#" } mute
     %div{style: "padding: 10px 200px 10px 200px;"}
       / start of gamework canvas
       .gameworkDiv

@@ -2,10 +2,11 @@ define [
   'underscore'
   'config'
   'views/game'
-  'views/system'
+  'views/pause'
+  'views/over'
   'views/htp'
   'easel'
-], (_, Config, GameScreen, SystemScreen, HTPScreen) ->
+], (_, Config, GameScreen, PauseScreen, OverScreen, HTPScreen) ->
   
   class Gamework
     version: '0.1.1'
@@ -44,24 +45,31 @@ define [
     start: ->
       document.getElementById("gameworkLoading").style.display = "none"
       
+      @paintBackground()
+
       @gameScreen = new GameScreen @
-      #@htpScreen = new HTPScreen @
-      @systemScreen = new SystemScreen @
+      @htpScreen = new HTPScreen @
+      @systemScreen = new PauseScreen @
+      @overScreen = new OverScreen @
       
       @stage.addChild @gameScreen.screen
+      @stage.addChild @htpScreen.screen
+      @stage.addChild @overScreen.screen
       @stage.addChild @systemScreen.screen
-      
-      @stage.addChild @workstage
       
       @showFPS() if Config.debug
       
       @paintBorder()
-      @stage.update()
       
       @gamingTime = 0
       @timerRun = true
       
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
+  
+    paintBackground: ->
+      background = new createjs.Bitmap @queue.getResult("background")
+      background.cache(0, 0, @w, @h)
+      @stage.addChild(background)
 
     showFPS: ->
       @fpsLabel = new createjs.Text("-- fps", "18px "+Config.font, "#FFFFFF")
@@ -105,14 +113,23 @@ define [
         @fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps"
       @stage.update()
       
-    restartGame: ->
+    restart: ->
       @ended = false
       @started = false
       @pauseState = false
       @downCounter = Config.startTime
       @gamingTime = 0
-      @systemScreen.pauseButtons.visible = false
-      @systemScreen.overButtons.visible = false
+      
+      ###
+      # fix, state machine
+      @gameScreen.screen.visible = true
+      @htpScreen.screen.visible = false
+      @systemScreen.screen.visible = false
+      @overScreen.screen.visible = false
+      #
+      ###
+      
+      @systemScreen.screen.visible = false
 
     startGame: ->
       return if @started
@@ -120,48 +137,30 @@ define [
       @started = true
       @gamingTime = 0
       @timerRun = true
-      @showSystemScreen(false)
+      @systemScreen.hide()
 
-    showSystemScreen: (show) ->
-      t = 200
-      if show
-        @systemScreen.sysScreen.visible = true
-        @workstage.visible = false
-        createjs.Tween.get(@systemScreen.sysScreenA).to({x:0}, t)
-        createjs.Tween.get(@systemScreen.sysScreenB).to({x:0}, t).call =>
-          if @ended
-            @systemScreen.overButtons.visible = true
-            @systemScreen.pauseButtons.visible = false
-          else
-            @systemScreen.overButtons.visible = false
-            @systemScreen.pauseButtons.visible = true
-      else
-        @systemScreen.overButtons.visible = false
-        @systemScreen.pauseButtons.visible = false
-        createjs.Tween.get(@systemScreen.sysScreenA).to({x:-@w2/2}, t);
-        createjs.Tween.get(@systemScreen.sysScreenB).to({x:@w2/2}, t).call =>
-          @systemScreen.sysScreen.visible = false
-          @workstage.visible = true
-
-    showHowScreen: (show) ->
-      console.log show
-
-    how: ->
+    how: (e) ->
+      e.preventDefault() if e
       @howState = !@howState
-      @showHowScreen if @howState then true else false
+      if @howState 
+        @gameScreen.hide()
+        @htpScreen.show()
+      else
+        @htpScreen.hide()
       @howState
       
-    pause: ->
-      if @timerRun
-        @pauseState = !@pauseState
-        if @pauseState
-          @showSystemScreen true
-        else
-          @showSystemScreen false
+    pause: (e) ->
+      e.preventDefault() if e
+      return unless @timerRun
+      @pauseState = !@pauseState
+      if @pauseState then @systemScreen.show() else @systemScreen.hide()
+
       @pauseState
     
-    mute: -> @muteState = !@muteState
+    mute: (e) ->
+      e.preventDefault() if e
+      @muteState = !@muteState
     
     gameOver: ->
       @ended = true
-      @showSystemScreen true
+      @overScreen.show()

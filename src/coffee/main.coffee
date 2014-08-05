@@ -22,4 +22,9 @@ requirejs.config
       exports: 'easel'
 
 require ["jquery", "game/index"], ($, game) ->
-  $ -> window.gamework = new game
+  $ ->
+    gamework = new game
+    $('#pause').on 'click', (e) -> gamework.pause(e)
+    $('#htp').on 'click', (e) -> gamework.how(e)
+    $('#mute').on 'click', (e) -> gamework.mute(e)
+    
