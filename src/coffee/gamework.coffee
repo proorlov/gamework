@@ -46,7 +46,7 @@ define [
       
       @gameScreen = new GameScreen @
       @systemScreen = new SystemScreen @
-      @htpScreen = new HTPScreen @
+      # @htpScreen = new HTPScreen @
       
       @stage.addChild @workstage
       
@@ -85,7 +85,6 @@ define [
         @startGame()
 
       if @timerRun && !@pauseState
-        #console.log(createjs.Ticker.getTime(true));
         @gamingTime += tick.delta;
         if Config.needTime == false || @gamingTime < Config.gameTime
           #playing
