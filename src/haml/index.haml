@@ -1,0 +1,21 @@
+!!! 5
+%html
+  %head
+    %meta{content: "text/html; charset=utf-8", "http-equiv" => "content-type"}/
+    %title Gamework
+    / start of gamework styles
+    %link{href: "css/gamework.css", rel: "stylesheet"}/
+    %link{href: "res/fonts/fonts.css", rel: "stylesheet"}/
+    / end of gamework styles
+    %script{ data-main: "js/main", src: "/vendor/require.js"}
+  %body
+    %div.controls{style: "text-align: center;"}
+      %a{href: "#", onclick: "gamework.how();"} how to play
+      %a{href: "#", onclick: "gamework.pause();"} pause
+      %a{href: "#", onclick: "gamework.mute();"} mute
+    %div{style: "padding: 10px 200px 10px 200px;"}
+      / start of gamework canvas
+      .gameworkDiv
+        #gameworkLoading.gameworkLoading
+        %canvas#gameworkCanvas.gameworkCanvas{height: "794", width: "1248"}
+      / end of gamework canvas
