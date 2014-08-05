@@ -6,6 +6,7 @@ define [
   class Base
     
     constructor: (game) ->
+      @screen = new createjs.Container
       @game = game
       @render()
       

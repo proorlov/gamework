@@ -45,8 +45,11 @@ define [
       document.getElementById("gameworkLoading").style.display = "none"
       
       @gameScreen = new GameScreen @
+      #@htpScreen = new HTPScreen @
       @systemScreen = new SystemScreen @
-      # @htpScreen = new HTPScreen @
+      
+      @stage.addChild @gameScreen.screen
+      @stage.addChild @systemScreen.screen
       
       @stage.addChild @workstage
       

@@ -102,6 +102,5 @@ define [
       @overButtons.addChild(total, score, nextButton)
       
       @sysScreen.addChild(@sysScreenA, @sysScreenB, @countDown, @pauseButtons, @overButtons);
-      
-      @game.stage.addChild(@sysScreen)
+      @screen.addChild(@sysScreen)
       
