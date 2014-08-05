@@ -120,14 +120,12 @@ define [
       @downCounter = Config.startTime
       @gamingTime = 0
       
-      ###
       # fix, state machine
       @gameScreen.screen.visible = true
       @htpScreen.screen.visible = false
       @systemScreen.screen.visible = false
       @overScreen.screen.visible = false
       #
-      ###
       
       @systemScreen.screen.visible = false
 
@@ -142,7 +140,8 @@ define [
     how: (e) ->
       e.preventDefault() if e
       @howState = !@howState
-      if @howState 
+      if @howState
+        @overScreen.screen.visible = false if @ended
         @gameScreen.hide()
         @htpScreen.show()
       else
