@@ -3,7 +3,7 @@ define [
   'config'
   'easel'
 ], (_, Config) ->
-  class Base
+  class Base extends createjs.EventDispatcher
     
     visible: false
     

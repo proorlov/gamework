@@ -13,7 +13,8 @@ define [
       @target.addEventListener 'click', => @game.addScore()
       Mediator.on 'change:score', => @update()
     
-    update: -> @txt.text = @game.points 
+    update: ->
+      @txt.text = @game.points
     
     render: ->
       @target = objContainer = new createjs.Container

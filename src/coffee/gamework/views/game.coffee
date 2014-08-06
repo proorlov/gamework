@@ -36,9 +36,9 @@ define [
       shape.graphics.beginFill("rgba(0,0,0,0.5)").drawRoundRectComplex 0, 0, 400, 130, 0, 0, 0, 10
       
       @txt = new createjs.Text("Your score: #{@game.points}", "30px "+Config.font2_reg, "#FFF")
-      @txt.textAlign = "center"
+      @txt.textAlign = "left"
       @txt.textBaseline = "alphabetic"
-      @txt.setTransform 120, 75 
+      @txt.setTransform 30, 75
       
       scoreContainer.setTransform @game.w-@game.borderSize-400, 0 
       

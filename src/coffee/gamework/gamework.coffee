@@ -2,8 +2,8 @@ define [
   'underscore'
   'config'
   'views/game'
-  'views/pause'
-  'views/over'
+  'views/system/pause'
+  'views/system/over'
   'views/htp'
   'helpers/mediator'
   'easel'
@@ -63,14 +63,11 @@ define [
       _.each @screens, (screen) => @stage.addChild screen.screen
       @paintBorder()
     
-    initMainScreen: ->
-      @screens.push @gameScreen = new GameScreen @
-    
     initScreens: ->
-      @initMainScreen()
-      @screens.push @htpScreen = new HTPScreen @
+      @screens.push @gameScreen = new GameScreen @
       @screens.push @systemScreen = new PauseScreen @
       @screens.push @overScreen = new OverScreen @
+      @screens.push @htpScreen = new HTPScreen @
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
@@ -151,12 +148,14 @@ define [
         _.each @screens, (screen) -> screen.screen.visible = false
         @htpScreen.screen.visible = true
         #
+        @timerRun = false
         @htpScreen.show()
       else
         # fix, state machine
         _.each @screens, (screen) -> screen.screen.visible = false
         @gameScreen.screen.visible = true
         #
+        @timerRun = true
         @htpScreen.hide()
       @howState
       
@@ -179,6 +178,9 @@ define [
       #
       @overScreen.show()
 
-    addScore: ->
+    addScore: (screen) ->
       @points += 1
-      Mediator.dispatchEvent 'change:score'
+      if screen
+        screen.dispatchEvent 'change:score'
+      else
+        Mediator.dispatchEvent 'change:score'
