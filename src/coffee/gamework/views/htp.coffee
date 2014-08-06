@@ -5,18 +5,13 @@ define [
   'easel'
 ], (_, Config, Game) ->
   class HTP extends Game
-
-    visible: false
     
     delegateEvents: -> false
+    afterHide: -> @game.restart()
     
     render: ->
       @paintStaticObjects()
       @renderSupport()
 
-    hide: ->
-      super
-      @game.restart()
-      
     #override
     renderSupport: -> false

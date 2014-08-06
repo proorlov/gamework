@@ -7,7 +7,7 @@ define [
     renderSupport: ->
       @simpleGameObj = new SimpleGameObj @game
       @screen.addChild(@simpleGameObj.screen)
-
-    hide: ->
-      @simpleGameObj.txt.text = 'Click me' #FIXME
+    
+    afterHide: ->
+      @simpleGameObj.txt.text = @simpleGameObj.start_text
       super

@@ -5,6 +5,8 @@ define [
 ], (Config, Mediator, SimpleGameObj) ->
   class HTPGameObj extends SimpleGameObj
     
+    start_text: "Click me"
+    
     delegateEvents: ->
       @target.addEventListener 'click', => @game.addScore(@)
       @on 'change:score', @update
@@ -17,7 +19,7 @@ define [
       shape = new createjs.Shape()
       shape.graphics.beginFill("rgba(0,0,0,0.5)").drawCircle(0, 0, 65)
       
-      @txt = new createjs.Text("Click me", "30px "+Config.font2_reg, "#FFF")
+      @txt = new createjs.Text(@start_text, "30px "+Config.font2_reg, "#FFF")
       @txt.textAlign = "center"
       @txt.textBaseline = "alphabetic"
       @txt.setTransform 0, 10 

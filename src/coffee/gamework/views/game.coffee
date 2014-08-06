@@ -7,18 +7,14 @@ define [
 ], (_, Config, Base, Mediator) ->
   class Game extends Base
     
-    visible: true
-    
     delegateEvents: ->
       Mediator.on 'change:score', => @update()
     
     update: ->
       @txt.text = "Your score: #{@game.points}"
     
-    render: ->
-      @paintStaticObjects()
-      @paitnScores()
-      @showTime() if Config.needTime
+    # Override
+    render: -> false
       
     paintStaticObjects: (stage) ->
       static_objects = new createjs.Container
@@ -57,10 +53,13 @@ define [
       @timeCircle.setTransform(30, 30)
       @screen.addChild(@timeCircle, @timeLabel)
 
+    timeLeft: (time) ->
+      Config.gameTime/1000 - Math.floor(time/1000)
+
     updateTimer: (time) ->
       return unless Config.needTime
       
-      @timeLabel.text = Config.gameTime/1000 - Math.floor(time/1000)
+      @timeLabel.text = @timeLeft(time)
       @timeCircle.graphics.clear()
       @timeCircle.graphics.beginFill("#4A4A4A").drawCircle(73, 73, 73).endFill()
       @timeCircle.graphics.setStrokeStyle(3).beginStroke("#FFFFFF").drawCircle(73, 73, 45).endStroke()

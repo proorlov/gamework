@@ -1,73 +1,72 @@
 define [
   'underscore'
   'config'
-  'views/game'
-  'views/system/pause'
-  'views/system/over'
-  'views/htp'
   'helpers/mediator'
   'easel'
-], (_, Config, GameScreen, PauseScreen, OverScreen, HTPScreen, Mediator) ->
+], (_, Config, Mediator) ->
   
   class Gamework
     version: '0.1.1'
   
     screens: []
+    
+    currentState: 'wait'
+    
+    states:
+      'wait':  ['game']
+      'game':  ['htp', 'pause', 'over']
+      'htp':   ['game']
+      'pause': ['game']
+      'over':  ['game']
 
     w: 1248
     h: 794
     borderSize: 12
     w2: Gamework::w - Gamework::borderSize
     h2: Gamework::h - Gamework::borderSize
+      
+    gamingTime: 0
     
     points: 0
-    #api
-    howState: false
-    pauseState: false
-    muteState: false
-    #run
-    started: false
-    ended: false
-    downCounter: Config.startTime
-    timerRun: false
-    gamingTime: 0
     
     constructor: () ->
       @canvas = document.getElementById("gameworkCanvas")
       createjs.Ticker.setFPS(30)
+      
       @stage = new createjs.Stage(@canvas)
       @stage.enableMouseOver(10)
       
-      @workstage = new createjs.Container
-      @workstage.visible = false
-
       @queue = new createjs.LoadQueue(true)
       @queue.addEventListener("complete", => @start())
       @queue.loadManifest(Config.manifest)
      
     start: ->
       @render()
-      
-      @gamingTime = 0
-      @timerRun = true
-      
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
+      Mediator.on 'state:change', (event) => @changeState(event)
       
     render: ->
       document.getElementById("gameworkLoading").style.display = "none"
       
-      @showFPS() if Config.debug
-      
       @paintBackground()
+      @showFPS() if Config.debug
       @initScreens()
-      _.each @screens, (screen) => @stage.addChild screen.screen
+      
+      @screens[@currentState].show()
+      
       @paintBorder()
     
-    initScreens: ->
-      @screens.push @gameScreen = new GameScreen @
-      @screens.push @systemScreen = new PauseScreen @
-      @screens.push @overScreen = new OverScreen @
-      @screens.push @htpScreen = new HTPScreen @
+    #Override
+    initScreens: -> false
+    
+    changeState: (event) ->
+      to = event.bubbles
+      return console.info "unspecified transition" if _.indexOf(@states[@currentState], to) < 0
+      
+      @screens[@currentState].dispatchEvent 'hide'
+      @screens[to].dispatchEvent 'show'
+      
+      @currentState = to 
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
@@ -79,9 +78,6 @@ define [
       @fpsLabel.setTransform(15, 15)
       @stage.addChild(@fpsLabel)
     
-    paintHowScreen: ->
-      @systemScreen.sysScreen = new createjs.Container
-      
     paintBorder: ->
       @border = new createjs.Shape
       color = "#4A4A4A"
@@ -92,95 +88,52 @@ define [
       @stage.addChild(@border)
       
     tickHandler: (tick) ->
-      if @downCounter > 0
-        @downCounter -= tick.delta
-        @updateCounter()
-      else
-        @startGame()
-
-      if @timerRun && !@pauseState
-        @gamingTime += tick.delta;
-        if Config.needTime == false || @gamingTime < Config.gameTime
-          #playing
-          @gameScreen.updateTimer(@gamingTime)
+      if @currentState == 'wait'
+        @screens['wait'].downCounter-= tick.delta
+        if @screens['wait'].value() < 0
+          Mediator.trigger new createjs.Event('state:change', "game")
         else
-          #time finished
-          @gameScreen.updateTimer(Config.gameTime);
-          @timerRun = false
-          @gameOver()
+          @screens['wait'].dispatchEvent 'update'
 
-      if !@timerRun && @gamingTime >= Config.gameTime && !@systemScreen.sysScreen.visible
-        #fix if pause
-        @gameOver()
-      if Config.debug
-        @fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps"
+      if @currentState == 'game'
+        @gamingTime += tick.delta
+        if @screens['game'].timeLeft(@gamingTime) <= 0
+          Mediator.trigger new createjs.Event('state:change', "over")
+        else
+          @screens['game'].updateTimer(@gamingTime)
+      
+      @fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps" if Config.debug
+      
       @stage.update()
       
     restart: ->
-      @ended = false
-      @started = false
-      @pauseState = false
       @downCounter = Config.startTime
       @gamingTime = 0
       @points = 0
-      Mediator.dispatchEvent 'change:score'
-      
-      # fix, state machine
-      _.each @screens, (screen) -> screen.screen.visible = false
-      @gameScreen.screen.visible = true
-      #
-      
-      @systemScreen.screen.visible = false
-
-    startGame: ->
-      return if @started
-      
-      @started = true
-      @gamingTime = 0
-      @timerRun = true
-      @systemScreen.hide()
+      Mediator.trigger 'change:score'
 
     how: (e) ->
       e.preventDefault() if e
-      @howState = !@howState
-      if @howState
-        # fix, state machine
-        _.each @screens, (screen) -> screen.screen.visible = false
-        @htpScreen.screen.visible = true
-        #
-        @timerRun = false
-        @htpScreen.show()
-      else
-        # fix, state machine
-        _.each @screens, (screen) -> screen.screen.visible = false
-        @gameScreen.screen.visible = true
-        #
-        @timerRun = true
-        @htpScreen.hide()
-      @howState
+      state = if @currentState != 'htp' then 'htp' else 'game'
+      Mediator.trigger new createjs.Event('state:change', state)
       
     pause: (e) ->
       e.preventDefault() if e
-      return unless @timerRun
-      @pauseState = !@pauseState
-      if @pauseState then @systemScreen.show() else @systemScreen.hide()
-      @pauseState
+      state = if @currentState != 'pause' then 'pause' else 'game'
+      Mediator.trigger new createjs.Event('state:change', state)
+    
+    gameOver: ->
+      e.preventDefault() if e
+      state = if @currentState != 'over' then 'over' else 'game'
+      Mediator.trigger new createjs.Event('state:change', state)
     
     mute: (e) ->
       e.preventDefault() if e
       @muteState = !@muteState
-    
-    gameOver: ->
-      @ended = true
-      # fix, state machine
-      _.each @screens, (screen) -> screen.screen.visible = false
-      @overScreen.screen.visible = true
-      #
-      @overScreen.show()
 
     addScore: (screen) ->
       @points += 1
       if screen
         screen.dispatchEvent 'change:score'
       else
-        Mediator.dispatchEvent 'change:score'
+        Mediator.trigger 'change:score'

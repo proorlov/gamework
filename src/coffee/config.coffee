@@ -33,8 +33,8 @@ define [], ->
 
     debug: true #fps and some console logs
     needTime: true
-    startTime: 0*1000
-    gameTime: 60*1000
+    startTime: 1*1000
+    gameTime: 2*1000
 
     static_objects: [
       {x:  140, y: 2,   scale: 1, img: 'cloud_top'}

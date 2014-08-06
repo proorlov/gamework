@@ -2,11 +2,10 @@ define [
   'underscore'
   'config'
   'views/system'
+  'helpers/mediator'
   'easel'
-], (_, Config, System) ->
+], (_, Config, System, Mediator) ->
   class Pause extends System
-    
-    visible: true
     
     childsRender: ->
       @buttons = new createjs.Container
@@ -37,7 +36,9 @@ define [
       replayButton.addChild(fon, txt)
       replayButton.setTransform(@game.w/2 - replayButton.getBounds().width/2, @game.h/2 - replayButton.getBounds().height/2)
       replayButton.cursor = "pointer"
-      replayButton.on "mousedown", => @game.restart()
+      replayButton.on "mousedown", =>
+        @game.restart()
+        Mediator.trigger new createjs.Event('state:change', 'game')
       
       resumeButton = new createjs.Container
       
@@ -53,20 +54,20 @@ define [
       resumeButton.cursor = "pointer"
       resumeButton.on "mousedown", => @game.pause()
       
+      @buttons.visible = false
       @buttons.addChild(workoutButton, replayButton, resumeButton)
       
-      @sysScreen.addChild @sysScreenA, @sysScreenB, @buttons#, @countDown
+      @sysScreen.addChild @sysScreenA, @sysScreenB, @buttons
 
-    show: ->
-      @screen.visible = true
+    afterShow: ->
+      @sysScreenA.x = -618
+      @sysScreenB.x = 618
+      
       createjs.Tween.get(@sysScreenA).to({x:0}, @t)
       createjs.Tween.get(@sysScreenB).to({x:0}, @t).call =>
-        @game.gameScreen.screen.visible = false
         @buttons.visible = true
 
-    hide: ->
-      @game.gameScreen.screen.visible = true
+    beforeHide: ->
       @buttons.visible = false
       createjs.Tween.get(@sysScreenA).to({x:-@game.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call =>
-        @screen.visible = false
+      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call => @hide()

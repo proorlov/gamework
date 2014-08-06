@@ -39,8 +39,23 @@ define [
       nextButton.addChild(fon, txt)
       nextButton.setTransform(@game.w/2 - nextButton.getBounds().width/2, @game.h*0.7 - nextButton.getBounds().height/2)
       nextButton.cursor = "pointer"
-      nextButton.on "mousedown", => @game.restart()
+      nextButton.on "mousedown", =>
+        @game.restart()
+        Mediator.trigger new createjs.Event('state:change', 'game')
       
       @buttons.addChild(total, score, nextButton)
       
-      @sysScreen.addChild @sysScreenA, @sysScreenB, @buttons#, @countDown 
+      @sysScreen.addChild @sysScreenA, @sysScreenB, @buttons
+
+    afterShow: ->
+      @sysScreenA.x = -618
+      @sysScreenB.x = 618
+      
+      createjs.Tween.get(@sysScreenA).to({x:0}, @t)
+      createjs.Tween.get(@sysScreenB).to({x:0}, @t).call =>
+        @buttons.visible = true
+
+    beforeHide: ->
+      @buttons.visible = false
+      createjs.Tween.get(@sysScreenA).to({x:-@game.w2/2}, @t)
+      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call => @hide()

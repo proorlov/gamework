@@ -7,12 +7,12 @@ define [
 ], (_, Config, Game, SimpleGameObj) ->
   class SimpleGame extends Game
     
-    visible: true
-    
     render: ->
       @paintStaticObjects()
       @paitnScores()
       @showTime() if Config.needTime
       
-      simpleGameObj = new SimpleGameObj @game
-      @screen.addChild(simpleGameObj.screen)
+      @simpleGameObj = new SimpleGameObj @game
+      
+    afterShow: ->
+      @screen.addChild(@simpleGameObj.screen)

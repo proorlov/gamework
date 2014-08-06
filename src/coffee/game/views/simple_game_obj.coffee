@@ -6,7 +6,6 @@ define [
   'easel'
 ], (_, Config, Base, Mediator) ->
   class SimpleGameObj extends Base
-    
     visible: true
     
     delegateEvents: ->
