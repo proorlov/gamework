@@ -81,4 +81,4 @@ gulp.task('watch', function() {
 });
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['scripts', 'haml', 'sass', 'watch', 'requirejsBuild', 'uglify']);
+gulp.task('default', ['scripts', 'haml', 'sass', 'watch']);

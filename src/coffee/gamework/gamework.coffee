@@ -5,11 +5,14 @@ define [
   'views/pause'
   'views/over'
   'views/htp'
+  'helpers/mediator'
   'easel'
-], (_, Config, GameScreen, PauseScreen, OverScreen, HTPScreen) ->
+], (_, Config, GameScreen, PauseScreen, OverScreen, HTPScreen, Mediator) ->
   
   class Gamework
     version: '0.1.1'
+  
+    screens: []
 
     w: 1248
     h: 794
@@ -43,28 +46,31 @@ define [
       @queue.loadManifest(Config.manifest)
      
     start: ->
-      document.getElementById("gameworkLoading").style.display = "none"
-      
-      @paintBackground()
-
-      @gameScreen = new GameScreen @
-      @htpScreen = new HTPScreen @
-      @systemScreen = new PauseScreen @
-      @overScreen = new OverScreen @
-      
-      @stage.addChild @gameScreen.screen
-      @stage.addChild @htpScreen.screen
-      @stage.addChild @overScreen.screen
-      @stage.addChild @systemScreen.screen
-      
-      @showFPS() if Config.debug
-      
-      @paintBorder()
+      @render()
       
       @gamingTime = 0
       @timerRun = true
       
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
+      
+    render: ->
+      document.getElementById("gameworkLoading").style.display = "none"
+      
+      @showFPS() if Config.debug
+      
+      @paintBackground()
+      @initScreens()
+      _.each @screens, (screen) => @stage.addChild screen.screen
+      @paintBorder()
+    
+    initMainScreen: ->
+      @screens.push @gameScreen = new GameScreen @
+    
+    initScreens: ->
+      @initMainScreen()
+      @screens.push @htpScreen = new HTPScreen @
+      @screens.push @systemScreen = new PauseScreen @
+      @screens.push @overScreen = new OverScreen @
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
@@ -119,12 +125,12 @@ define [
       @pauseState = false
       @downCounter = Config.startTime
       @gamingTime = 0
+      @points = 0
+      Mediator.dispatchEvent 'change:score'
       
       # fix, state machine
+      _.each @screens, (screen) -> screen.screen.visible = false
       @gameScreen.screen.visible = true
-      @htpScreen.screen.visible = false
-      @systemScreen.screen.visible = false
-      @overScreen.screen.visible = false
       #
       
       @systemScreen.screen.visible = false
@@ -141,10 +147,16 @@ define [
       e.preventDefault() if e
       @howState = !@howState
       if @howState
-        @overScreen.screen.visible = false if @ended
-        @gameScreen.hide()
+        # fix, state machine
+        _.each @screens, (screen) -> screen.screen.visible = false
+        @htpScreen.screen.visible = true
+        #
         @htpScreen.show()
       else
+        # fix, state machine
+        _.each @screens, (screen) -> screen.screen.visible = false
+        @gameScreen.screen.visible = true
+        #
         @htpScreen.hide()
       @howState
       
@@ -153,7 +165,6 @@ define [
       return unless @timerRun
       @pauseState = !@pauseState
       if @pauseState then @systemScreen.show() else @systemScreen.hide()
-
       @pauseState
     
     mute: (e) ->
@@ -162,4 +173,12 @@ define [
     
     gameOver: ->
       @ended = true
+      # fix, state machine
+      _.each @screens, (screen) -> screen.screen.visible = false
+      @overScreen.screen.visible = true
+      #
       @overScreen.show()
+
+    addScore: ->
+      @points += 1
+      Mediator.dispatchEvent 'change:score'

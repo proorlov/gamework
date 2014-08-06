@@ -8,6 +8,8 @@ define [
 
     visible: false
     
+    delegateEvents: -> false
+    
     render: ->
       @paintStaticObjects()
       @renderSupport()

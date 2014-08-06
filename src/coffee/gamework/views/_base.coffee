@@ -12,5 +12,17 @@ define [
       @screen.visible = @visible
       @game = game
       @render()
-      
+      @delegateEvents()
+    
+    ##
+    # override 
     render: -> false
+    delegateEvents: -> false
+    #
+    ##
+
+    show: ->
+      @screen.visible = true
+
+    hide: ->
+      @screen.visible = false

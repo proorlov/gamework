@@ -2,9 +2,16 @@ define [
   'underscore'
   'config'
   'views/system'
+  'helpers/mediator'
   'easel'
-], (_, Config, System) ->
+], (_, Config, System, Mediator) ->
   class Over extends System
+    
+    delegateEvents: ->
+      Mediator.on 'change:score', => @update()
+    
+    update: ->
+      @score.text = "#{@game.points} points"
     
     childsRender: ->
       total = new createjs.Text("Total score:", "120px "+Config.font2_bold, "#F1F1F1")
@@ -12,7 +19,7 @@ define [
       total.textBaseline = "alphabetic"
       total.setTransform(@game.w/2, 300)
       
-      score = new createjs.Text(@game.points + " points", "120px "+Config.font2_thin, "#F1F1F1")
+      @score = score = new createjs.Text("#{@game.points} points", "120px "+Config.font2_thin, "#F1F1F1")
       score.textAlign = "center"
       score.textBaseline = "alphabetic"
       score.setTransform(@game.w/2, 420)

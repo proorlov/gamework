@@ -7,8 +7,9 @@ requirejs.config
     sound: "./../vendor/soundjs-0.5.2.min"
     tween: "./../vendor/tweenjs-0.5.1.min"
     config: "/js/config"
-    views: "/js/game/views"
-    gamework: '/js/gamework'
+    views: "/js/gamework/views"
+    helpers: "/js/gamework/helpers"
+    gamework: '/js/gamework/gamework'
     layouts: "/js/app/layouts"
     game: "/js/game"
   shim:
@@ -23,6 +24,7 @@ requirejs.config
 require ["jquery", "js/game/index.js"], ($, game) ->
   $ ->
     gamework = new game
+    
     $('#pause').on 'click', (e) -> gamework.pause(e)
     $('#htp').on 'click', (e) -> gamework.how(e)
     $('#mute').on 'click', (e) -> gamework.mute(e)
