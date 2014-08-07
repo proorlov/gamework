@@ -9,6 +9,7 @@ define [
       @target.addEventListener 'click', => @update()
     
     update: ->
+      Mediator.trigger 'change:score:success'
       Mediator.trigger new createjs.Event('state:change', 'htp:success')
     
     render: ->

@@ -30,6 +30,8 @@ define [
     
     points: 0
     
+    isMute: false
+    
     constructor: () ->
       @canvas = document.getElementById("gameworkCanvas")
       createjs.Ticker.setFPS(30)
@@ -38,11 +40,13 @@ define [
       @stage.enableMouseOver(10)
       
       @queue = new createjs.LoadQueue(true)
+      @queue.installPlugin(createjs.Sound)
       @queue.addEventListener("complete", => @start())
       @queue.loadManifest(Config.manifest)
      
     start: ->
       @render()
+      @soundHandler()
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
       Mediator.on 'state:change', (event) => @changeState(event)
       
@@ -73,7 +77,8 @@ define [
       @screens[@currentState].dispatchEvent 'hide'
       @screens[to].dispatchEvent 'show'
       
-      @currentState = to 
+      @currentState = to
+      Mediator.trigger new createjs.Event('state:change:success')
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
@@ -121,7 +126,10 @@ define [
 
     how: (e) ->
       e.preventDefault() if e
-      state = if @currentState != 'htp' then 'htp' else 'game'
+      if @currentState == 'htp' or @currentState == 'htp:success'
+        state = 'game'
+      else
+        state = 'htp'
       Mediator.trigger new createjs.Event('state:change', state)
       
     pause: (e) ->
@@ -136,8 +144,25 @@ define [
     
     mute: (e) ->
       e.preventDefault() if e
-      @muteState = !@muteState
+      createjs.Sound.setMute(@isMute = !@isMute)
 
     addScore: (points) ->
       @points += points
       Mediator.trigger new createjs.Event('change:score')
+      Mediator.trigger new createjs.Event('change:score:success')
+
+    soundHandler: ->
+      Mediator.on 'state:change:success', =>
+        switch @currentState
+          when 'game'
+            createjs.Sound.stop()
+            createjs.Sound.play("music", loop: -1)
+          when 'over'
+            createjs.Sound.stop()
+            createjs.Sound.play("over", loop: -1)
+          when 'pause'
+            createjs.Sound.stop()
+                
+      Mediator.on 'change:score:success', (e) =>
+        createjs.Sound.play("success")
+        

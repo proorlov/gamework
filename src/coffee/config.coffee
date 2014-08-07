@@ -1,4 +1,5 @@
-define [], ->
+define [
+  'easel'], ->
   class Config
     manifest: [
       {src: 'res/img/bg.jpg', id: 'background'},
@@ -22,7 +23,11 @@ define [], ->
       {src: 'res/img/car2.png', id: 'car2'},
       {src: 'res/img/car3.png', id: 'car3'},
       {src: 'res/img/car4.png', id: 'car4'},
-      {src: 'res/data.json', id: 'data'}
+      {src: 'res/data.json', id: 'data'},
+      {src: 'res/sound/error_apple.wav', id: 'error'},
+      {src: 'res/sound/music.wav', id: 'music'},
+      {src: 'res/sound/score.wav', id: 'over'},
+      {src: 'res/sound/right_apple.wav', id: 'success'}
     ]
   
     font:           "Arial"
@@ -34,8 +39,8 @@ define [], ->
 
     debug: true #fps and some console logs
     needTime: true
-    startTime: 0*1000
-    gameTime: 60*1000
+    startTime: 3*1000
+    gameTime: 3*1000
     
     points: 1
 
@@ -53,16 +58,16 @@ define [], ->
       {x: 1034, y: 244, scale: 1, img: 'home6'}
     
       {x:-59,  y:391, scale: 0.64, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:122,  y:209, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:181,  y:303, scale: 0.73, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:553,  y:61,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:671,  y:375, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:976,  y:83,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:1142, y:281, scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:122,  y:209, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 35000, width: 166, distance: 600 },
+      {x:181,  y:303, scale: 0.73, img: 'cloud', dynamic: true, animate: 'left', duration: 51000, width: 166, distance: 600 },
+      {x:553,  y:61,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 32000, width: 166, distance: 600 },
+      {x:671,  y:375, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 27000, width: 166, distance: 600 },
+      {x:976,  y:83,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 36000, width: 166, distance: 600 },
+      {x:1142, y:281, scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 34000, width: 166, distance: 600 },
 
-      {x:522,  y:30,  scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
-      {x:1126, y:200, scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
-      {x:227,  y:120, scale: 1, img: 'birds2', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
+      {x:522,  y:30,  scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 24000, width: 70, distance: 600 },
+      {x:1126, y:200, scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 27000, width: 70, distance: 600 },
+      {x:227,  y:120, scale: 1, img: 'birds2', dynamic: true, animate: 'right', duration: 22000, width: 70, distance: 600 },
       
       {x:445, y:704, scale: 1, img: 'car1', dynamic: true, animate: 'right', duration: 5000, width: 102, distance: 500 },
       {x:610, y:704, scale: 1, img: 'car2', dynamic: true, animate: 'right', duration: 3000, width: 102, distance: 500 },
