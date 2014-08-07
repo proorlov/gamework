@@ -46,33 +46,35 @@ define [
 
     objects: [
       {x:  140, y: 2,   scale: 1, img: 'cloud_top'}
-      {x:  158, y: 556, scale: 1, img: 'tree1'}
       {x:  357, y: 607, scale: 1, img: 'tree2'}
       {x:  881, y: 566, scale: 1, img: 'tree3'}
+      
+      {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 5000, distance: 500 },
+      {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 3000, distance: 500 },
+      {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 7000, distance: 500 },
+      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 6000, distance: 600 },
+      
+      {x:  158, y: 556, scale: 1, img: 'tree1'}
       {x: 1090, y: 581, scale: 1, img: 'tree4'}
-      {x:   59, y: 244, scale: 1, img: 'home1'}
       {x:  716, y:  32, scale: 1, img: 'home4'}
       {x:  238, y:  32, scale: 1, img: 'home2'}
       {x:  487, y: 103, scale: 1, img: 'home3'}     
       {x:  880, y: 105, scale: 1, img: 'home5'}
-      {x: 1034, y: 244, scale: 1, img: 'home6'}
-    
-      {x:-59,  y:391, scale: 0.64, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
-      {x:122,  y:209, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 35000, width: 166, distance: 600 },
-      {x:181,  y:303, scale: 0.73, img: 'cloud', dynamic: true, animate: 'left', duration: 51000, width: 166, distance: 600 },
-      {x:553,  y:61,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 32000, width: 166, distance: 600 },
-      {x:671,  y:375, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 27000, width: 166, distance: 600 },
-      {x:976,  y:83,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 36000, width: 166, distance: 600 },
-      {x:1142, y:281, scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 34000, width: 166, distance: 600 },
-
-      {x:522,  y:30,  scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 24000, width: 70, distance: 600 },
-      {x:1126, y:200, scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 27000, width: 70, distance: 600 },
-      {x:227,  y:120, scale: 1, img: 'birds2', dynamic: true, animate: 'right', duration: 22000, width: 70, distance: 600 },
       
-      {x:445, y:704, scale: 1, img: 'car1', dynamic: true, animate: 'right', duration: 5000, width: 102, distance: 500 },
-      {x:610, y:704, scale: 1, img: 'car2', dynamic: true, animate: 'right', duration: 3000, width: 102, distance: 500 },
-      {x:826, y:693, scale: 1, img: 'car3', dynamic: true, animate: 'right', duration: 7000, width: 102, distance: 500 },
-      {x:983, y:672, scale: 1, img: 'car4', dynamic: true, animate: 'left',  duration: 6000, width: 113, distance: 600 },
+      {x:181,  y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 400 },
+      {x:   59, y: 244, scale: 1, img: 'home1'}
+      {x: 1034, y: 244, scale: 1, img: 'home6'}
+
+      {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 600 },
+      {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 600 },
+      {x:227,  y:120, scale: 1, img: 'birds2', animate: 'right', duration: 25000, distance: 600 },
+    
+      {x:-59,  y:391, scale: 0.64, img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
+      {x:122,  y:209, scale: 0.58, img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
+      {x:553,  y:61,  scale: 1,    img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
+      {x:671,  y:375, scale: 0.58, img: 'cloud', animate: 'left', duration: 35000, distance: 600 },
+      {x:976,  y:83,  scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 600 },
+      {x:1142, y:281, scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 600 },
     ]
 
   new Config

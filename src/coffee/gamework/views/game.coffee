@@ -37,7 +37,7 @@ define [
       
       for obj in Config.objects by -1
         do (obj) =>
-          if obj.dynamic
+          if _.has obj, 'animate'
             @paintDymamicObj(obj)
           else
             el = new createjs.Bitmap(@game.queue.getResult(obj.img))
@@ -46,15 +46,16 @@ define [
 
     paintDymamicObj: (obj) ->
       el = new createjs.Bitmap(@game.queue.getResult(obj.img))
+       
       el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
       @animated_objs.push {el: el, obj: obj}
       
       x = obj.x
-      x1 = while x<(@game.w+obj.width)
+      x1 = while x<(@game.w+el.getBounds().width)
         x+= obj.distance
 
       x = obj.x
-      x = while x>0-obj.width
+      x = while x>0-el.getBounds().width
         x-= obj.distance
       
       @screen.addChild(el)
@@ -70,7 +71,6 @@ define [
         @animated_objs.push {el: nel, obj: nobj}
         @screen.addChild(nel)
       
-    
     paitnScores: ->
       scoreContainer = new createjs.Container
       

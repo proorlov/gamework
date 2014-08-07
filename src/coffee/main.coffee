@@ -29,3 +29,5 @@ require ["jquery", "js/game/index.js"], ($, game) ->
     $('#htp').on 'click', (e) -> gamework.how(e)
     $('#mute').on 'click', (e) -> gamework.mute(e)
     
+    document.onselectstart = -> return false
+    

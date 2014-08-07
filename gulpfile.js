@@ -52,8 +52,8 @@ gulp.task('requirejsBuild', function() {
 
 gulp.task('uglify', function() {
   gulp.src('public/js/build/gamework.min.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('public/js/build/'))
+    .pipe(uglify( ))
+    .pipe(gulp.dest('public/js/uglify/'))
 });
 
 gulp.task('scripts', function() {
@@ -83,3 +83,4 @@ gulp.task('watch', function() {
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', ['scripts', 'haml', 'sass', 'watch']);
+gulp.task('build', ['requirejsBuild', 'uglify']);
