@@ -32,6 +32,7 @@ define [
       shape.cursor = "pointer"
       
       @txt = new createjs.Text(Config.points, "60px "+Config.font2_reg, "#FFF")
+      @txt.cursor = "pointer"
       @txt.textAlign = "center"
       @txt.textBaseline = "alphabetic"
       @txt.setTransform( 0, 20 )

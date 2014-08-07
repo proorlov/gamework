@@ -17,8 +17,10 @@ define [
       
       shape = new createjs.Shape()
       shape.graphics.beginFill("rgba(0,0,0,0.5)").drawCircle(0, 0, 65)
+      shape.cursor = "pointer"
       
       @txt = new createjs.Text("Click me", "30px "+Config.font2_reg, "#FFF")
+      @txt.cursor = "pointer"
       @txt.textAlign = "center"
       @txt.textBaseline = "alphabetic"
       @txt.setTransform 0, 10 
