@@ -33,7 +33,6 @@ define [
 
     hidePerformer: ->
       @beforeHide()
-      
 
     show: ->
       @game.stage.addChildAt @screen, 1

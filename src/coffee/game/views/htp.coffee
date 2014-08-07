@@ -6,8 +6,7 @@ define [
     
     renderSupport: ->
       @simpleGameObj = new SimpleGameObj @game
-      @screen.addChild(@simpleGameObj.screen)
-    
-    afterHide: ->
-      @simpleGameObj.txt.text = @simpleGameObj.start_text
-      super
+      
+    afterShow: ->
+      @screen.addChild @simpleGameObj.screen
+      @simpleGameObj.dispatchEvent 'show'

@@ -5,6 +5,7 @@ define [
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
+
   class Wait extends System
     
     downCounter: Config.startTime
@@ -23,7 +24,9 @@ define [
       @countDown.textBaseline = "alphabetic"
       @countDown.setTransform(@game.w/2, @game.h/2)
       
-      @sysScreen.addChild @sysScreenA, @sysScreenB, @countDown
+      @sysScreen.addChild @countDown
+    
+    beforeShow: -> @show()
 
     beforeHide: ->
       @countDown.visible = false

@@ -5,7 +5,8 @@ define [
   'views/system/pause'
   'views/system/over'
   'views/system/wait'
-], (Gamework, HTPScreen, GameScreen, PauseScreen, OverScreen, WaitScreen) ->
+  'views/htp/success'
+], (Gamework, HTPScreen, GameScreen, PauseScreen, OverScreen, WaitScreen, SuccessScreen) ->
   
   # simple Game
   
@@ -17,3 +18,4 @@ define [
       @screens['htp'] = new HTPScreen @
       @screens['pause'] = new PauseScreen @
       @screens['over'] = new OverScreen @
+      @screens['htp:success'] = new SuccessScreen @

@@ -7,6 +7,8 @@ define [
 ], (_, Config, Base, Mediator) ->
   class Game extends Base
     
+    animated_objs: []
+    
     delegateEvents: ->
       Mediator.on 'change:score', => @update()
     
@@ -14,17 +16,61 @@ define [
       @txt.text = "Your score: #{@game.points}"
     
     # Override
-    render: -> false
+    render: ->
+      @paintObjects()
+      @paitnScores()
+      @showTime() if Config.needTime
+      @paitQuest()
       
-    paintStaticObjects: (stage) ->
+    paitQuest: ->
+      @quests = @game.queue.getResult('data').quests
+      
+      txt = new createjs.Text(@quests[0], "30px "+Config.font2_reg, "#4C4C4C")
+      txt.textAlign = "left"
+      txt.textBaseline = "alphabetic"
+      txt.setTransform 220, 100
+      
+      @screen.addChild(txt)
+      
+    paintObjects: (stage) ->
       static_objects = new createjs.Container
       
-      for obj in Config.static_objects by -1
+      for obj in Config.objects by -1
         do (obj) =>
-          el = new createjs.Bitmap(@game.queue.getResult(obj.img))
-          el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
-          @screen.addChild(el)
+          if obj.dynamic
+            @paintDymamicObj(obj)
+          else
+            el = new createjs.Bitmap(@game.queue.getResult(obj.img))
+            el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
+            @screen.addChild(el)
 
+    paintDymamicObj: (obj) ->
+      el = new createjs.Bitmap(@game.queue.getResult(obj.img))
+      el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
+      @animated_objs.push {el: el, obj: obj}
+      
+      x = obj.x
+      x1 = while x<(@game.w+obj.width)
+        x+= obj.distance
+
+      x = obj.x
+      x = while x>0-obj.width
+        x-= obj.distance
+      
+      @screen.addChild(el)
+      
+      _.each _.union(x, x1), (x) =>
+        nel = el.clone()
+
+        nobj = _.clone(obj)
+        nobj.x = x
+        
+        nel.setTransform(nobj.x, nobj.y, nobj.scale, nobj.scale)
+
+        @animated_objs.push {el: nel, obj: nobj}
+        @screen.addChild(nel)
+      
+    
     paitnScores: ->
       scoreContainer = new createjs.Container
       
@@ -41,7 +87,6 @@ define [
       scoreContainer.addChild(shape, @txt)
       @screen.addChild(scoreContainer)
       
-
     showTime: ->
       @timeLabel = new createjs.Text("", "bold 40px "+Config.font3_bold, "#EA5151")
       @timeLabel.textAlign = "center"

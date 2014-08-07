@@ -13,11 +13,12 @@ define [
     currentState: 'wait'
     
     states:
-      'wait':  ['game']
-      'game':  ['htp', 'pause', 'over']
-      'htp':   ['game']
-      'pause': ['game']
-      'over':  ['game']
+      'wait':         ['game']
+      'game':         ['htp', 'pause', 'over']
+      'htp':          ['game', 'htp:success']
+      'htp:success':  ['game']
+      'pause':        ['game']
+      'over':         ['game']
 
     w: 1248
     h: 794
@@ -57,7 +58,13 @@ define [
       @paintBorder()
     
     #Override
-    initScreens: -> false
+    initScreens: ->
+      @screens['game'] = new GameScreen @
+      @screens['wait'] = new WaitScreen @
+      @screens['htp'] = new HTPScreen @
+      @screens['pause'] = new PauseScreen @
+      @screens['over'] = new OverScreen @
+      @screens['htp:success'] = new SuccessScreen @
     
     changeState: (event) ->
       to = event.bubbles
@@ -110,7 +117,7 @@ define [
       @downCounter = Config.startTime
       @gamingTime = 0
       @points = 0
-      Mediator.trigger 'change:score'
+      Mediator.trigger new createjs.Event('change:score')
 
     how: (e) ->
       e.preventDefault() if e
@@ -131,9 +138,6 @@ define [
       e.preventDefault() if e
       @muteState = !@muteState
 
-    addScore: (screen) ->
-      @points += 1
-      if screen
-        screen.dispatchEvent 'change:score'
-      else
-        Mediator.trigger 'change:score'
+    addScore: (points) ->
+      @points += points
+      Mediator.trigger new createjs.Event('change:score')

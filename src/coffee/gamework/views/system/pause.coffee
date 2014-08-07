@@ -5,6 +5,7 @@ define [
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
+
   class Pause extends System
     
     childsRender: ->
@@ -57,12 +58,9 @@ define [
       @buttons.visible = false
       @buttons.addChild(workoutButton, replayButton, resumeButton)
       
-      @sysScreen.addChild @sysScreenA, @sysScreenB, @buttons
+      @sysScreen.addChild @buttons
 
     afterShow: ->
-      @sysScreenA.x = -618
-      @sysScreenB.x = 618
-      
       createjs.Tween.get(@sysScreenA).to({x:0}, @t)
       createjs.Tween.get(@sysScreenB).to({x:0}, @t).call =>
         @buttons.visible = true

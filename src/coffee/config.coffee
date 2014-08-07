@@ -21,7 +21,8 @@ define [], ->
       {src: 'res/img/car1.png', id: 'car1'},
       {src: 'res/img/car2.png', id: 'car2'},
       {src: 'res/img/car3.png', id: 'car3'},
-      {src: 'res/img/car4.png', id: 'car4'}
+      {src: 'res/img/car4.png', id: 'car4'},
+      {src: 'res/data.json', id: 'data'}
     ]
   
     font:           "Arial"
@@ -33,10 +34,12 @@ define [], ->
 
     debug: true #fps and some console logs
     needTime: true
-    startTime: 1*1000
-    gameTime: 2*1000
+    startTime: 0*1000
+    gameTime: 60*1000
+    
+    points: 1
 
-    static_objects: [
+    objects: [
       {x:  140, y: 2,   scale: 1, img: 'cloud_top'}
       {x:  158, y: 556, scale: 1, img: 'tree1'}
       {x:  357, y: 607, scale: 1, img: 'tree2'}
@@ -49,27 +52,22 @@ define [], ->
       {x:  880, y: 105, scale: 1, img: 'home5'}
       {x: 1034, y: 244, scale: 1, img: 'home6'}
     
-      #dinamic
-      {x:-59,  y:391, scale: 0.64, img: 'cloud'},
-      {x:122,  y:209, scale: 0.58, img: 'cloud'},
-      {x:181,  y:303, scale: 0.73, img: 'cloud'},
-      {x:553,  y:61,  scale: 1,    img: 'cloud'},
-      {x:671,  y:375, scale: 0.58, img: 'cloud'},
-      {x:976,  y:83,  scale: 1,    img: 'cloud'},
-      {x:1142, y:281, scale: 1,    img: 'cloud'},
-      
-      {x:522,  y:30,  scale: 1, img: 'birds1'},
-      {x:1126, y:200, scale: 1, img: 'birds1'},
-      {x:227,  y:120, scale: 1, img: 'birds2'},
-      
-      {x:445, y:704, scale: 1, img: 'car1'},
-      {x:610, y:704, scale: 1, img: 'car2'},
-      {x:826, y:693, scale: 1, img: 'car3'},
-      {x:983, y:672, scale: 1, img: 'car4'},
-    ],
-    
-    dynamic_objects: [
+      {x:-59,  y:391, scale: 0.64, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:122,  y:209, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:181,  y:303, scale: 0.73, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:553,  y:61,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:671,  y:375, scale: 0.58, img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:976,  y:83,  scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
+      {x:1142, y:281, scale: 1,    img: 'cloud', dynamic: true, animate: 'left', duration: 40000, width: 166, distance: 600 },
 
+      {x:522,  y:30,  scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
+      {x:1126, y:200, scale: 1, img: 'birds1', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
+      {x:227,  y:120, scale: 1, img: 'birds2', dynamic: true, animate: 'right', duration: 40000, width: 70, distance: 600 },
+      
+      {x:445, y:704, scale: 1, img: 'car1', dynamic: true, animate: 'right', duration: 5000, width: 102, distance: 500 },
+      {x:610, y:704, scale: 1, img: 'car2', dynamic: true, animate: 'right', duration: 3000, width: 102, distance: 500 },
+      {x:826, y:693, scale: 1, img: 'car3', dynamic: true, animate: 'right', duration: 7000, width: 102, distance: 500 },
+      {x:983, y:672, scale: 1, img: 'car4', dynamic: true, animate: 'left',  duration: 6000, width: 113, distance: 600 },
     ]
 
   new Config
