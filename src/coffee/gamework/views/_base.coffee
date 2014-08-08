@@ -7,10 +7,12 @@ define [
     
     visible: false
     
-    constructor: (game) ->
+    constructor: (parent) ->
       @screen = new createjs.Container
       @screen.visible = @visible
-      @game = game
+      @parent = parent
+      @game = gamework
+      @parent.screen.addChild @screen
       @render()
       @delegateEvents()
       
@@ -20,6 +22,7 @@ define [
     ##
     # override 
     render: -> false
+    undelegateEvents: -> false
     delegateEvents: -> false
     beforeShow: -> @show()
     afterShow: -> false
@@ -35,11 +38,15 @@ define [
       @beforeHide()
 
     show: ->
-      @game.stage.addChildAt @screen, 1
       @screen.visible = true
       @afterShow()
 
     hide: ->
-      @game.stage.removeChild @screen
       @screen.visible = false
       @afterHide()
+
+    destroy: ->
+      @undelegateEvents()
+      @screen.removeAllEventListeners()
+      @removeAllEventListeners()
+      @parent.screen.removeChild @screen

@@ -1,11 +1,11 @@
 define [
-  'views/htp'
+  'scenes/htp'
   'game/views/htp/simple_game_obj'
 ], (HTP, SimpleGameObj) ->
   class HTPSimple extends HTP
     
     renderSupport: ->
-      @simpleGameObj = new SimpleGameObj @game
+      @simpleGameObj = new SimpleGameObj @, @game
       
     afterShow: ->
       @screen.addChild @simpleGameObj.screen

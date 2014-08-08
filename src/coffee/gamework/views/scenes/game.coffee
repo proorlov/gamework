@@ -13,24 +13,13 @@ define [
       Mediator.on 'change:score', => @update()
     
     update: ->
-      @txt.text = "Your score: #{@game.points}"
+      @txt.text = "Your score: #{gamework.points}"
     
     # Override
     render: ->
       @paintObjects()
       @paitnScores()
       @showTime() if Config.needTime
-      @paitQuest()
-      
-    paitQuest: ->
-      @quests = @game.queue.getResult('data').quests
-      
-      txt = new createjs.Text(@quests[0], "30px "+Config.font2_reg, "#4C4C4C")
-      txt.textAlign = "left"
-      txt.textBaseline = "alphabetic"
-      txt.setTransform 220, 100
-      
-      @screen.addChild(txt)
       
     paintObjects: (stage) ->
       static_objects = new createjs.Container
@@ -40,18 +29,18 @@ define [
           if _.has obj, 'animate'
             @paintDymamicObj(obj)
           else
-            el = new createjs.Bitmap(@game.queue.getResult(obj.img))
+            el = new createjs.Bitmap(gamework.queue.getResult(obj.img))
             el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
             @screen.addChild(el)
 
     paintDymamicObj: (obj) ->
-      el = new createjs.Bitmap(@game.queue.getResult(obj.img))
+      el = new createjs.Bitmap(gamework.queue.getResult(obj.img))
        
       el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
       @animated_objs.push {el: el, obj: obj}
       
       x = obj.x
-      x1 = while x<(@game.w+el.getBounds().width)
+      x1 = while x<(Config.w+el.getBounds().width)
         x+= obj.distance
 
       x = obj.x
@@ -77,12 +66,12 @@ define [
       shape = new createjs.Shape
       shape.graphics.beginFill("rgba(0,0,0,0.5)").drawRoundRectComplex 0, 0, 400, 130, 0, 0, 0, 10
       
-      @txt = new createjs.Text("Your score: #{@game.points}", "30px "+Config.font2_reg, "#FFF")
+      @txt = new createjs.Text("Your score: #{gamework.points}", "30px "+Config.font2_reg, "#FFF")
       @txt.textAlign = "left"
       @txt.textBaseline = "alphabetic"
       @txt.setTransform 30, 75
       
-      scoreContainer.setTransform @game.w-@game.borderSize-400, 0 
+      scoreContainer.setTransform Config.w-Config.borderSize-400, 0 
       
       scoreContainer.addChild(shape, @txt)
       @screen.addChild(scoreContainer)

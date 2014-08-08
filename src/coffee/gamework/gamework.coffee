@@ -2,37 +2,35 @@ define [
   'underscore'
   'config'
   'helpers/mediator'
+  'scenes/system/wait'
+  'scenes/system/pause'
+  'scenes/system/over'
+  'scenes/htp'
+  'scenes/htp/success'
+  'scenes/game'
   'easel'
-], (_, Config, Mediator) ->
+], (_, Config, Mediator, WaitScene, PauseScene, OverScene, HTPScene, HTPSuccessScene, GameScene) ->
   
   class Gamework
     version: '0.1.1'
   
     screens: []
-    
     currentState: 'wait'
-    
-    states:
-      'wait':         ['game']
-      'game':         ['htp', 'pause', 'over']
-      'htp':          ['game', 'htp:success']
-      'htp:success':  ['game']
-      'pause':        ['game']
-      'over':         ['game']
-
-    w: 1248
-    h: 794
-    borderSize: 12
-    w2: Gamework::w - Gamework::borderSize
-    h2: Gamework::h - Gamework::borderSize
-      
     gamingTime: 0
-    
     points: 0
-    
     isMute: false
     
-    constructor: () ->
+    stats:
+      strike: 0
+      score: 0
+      errors: 0
+      timer: 0
+      words: []
+    
+    constructor: ->
+      @initStates()
+      @initsScenes()
+      
       @canvas = document.getElementById("gameworkCanvas")
       createjs.Ticker.setFPS(30)
       
@@ -43,7 +41,31 @@ define [
       @queue.installPlugin(createjs.Sound)
       @queue.addEventListener("complete", => @start())
       @queue.loadManifest(Config.manifest)
-     
+      
+      @screen = new createjs.Container
+      
+      Mediator.on 'next:phase', => @nextPhase()
+      
+    #Override
+    initStates: ->
+      @states =
+        'wait':  ['game']
+        'game':  ['htp', 'pause', 'over']
+        'htp':   ['game', 'htp:success']
+        'pause': ['game']
+        'over':  ['game']
+        'htp:success':  ['game']
+      
+    #Override
+    initsScenes: ->
+      @scenes = 
+        'wait':         WaitScene
+        'game':         GameScene
+        'htp':          HTPScene
+        'htp:success':  HTPSuccessScene
+        'pause':        PauseScene
+        'over':         OverScene
+    
     start: ->
       @render()
       @soundHandler()
@@ -55,34 +77,27 @@ define [
       
       @paintBackground()
       @showFPS() if Config.debug
-      @initScreens()
-      
-      @screens[@currentState].show()
-      
+      @initCurrentScene()
+      @stage.addChild(@screen)
       @paintBorder()
     
     #Override
-    initScreens: ->
-      @screens['game'] = new GameScreen @
-      @screens['wait'] = new WaitScreen @
-      @screens['htp'] = new HTPScreen @
-      @screens['pause'] = new PauseScreen @
-      @screens['over'] = new OverScreen @
-      @screens['htp:success'] = new SuccessScreen @
+    initCurrentScene: ->
+      @screens[@currentState] ||= @currentScene = new @scenes[@currentState] @
+      @screens[@currentState].dispatchEvent 'show'
     
     changeState: (event) ->
       to = event.bubbles
       return console.info "unspecified transition" if _.indexOf(@states[@currentState], to) < 0
-      
       @screens[@currentState].dispatchEvent 'hide'
-      @screens[to].dispatchEvent 'show'
-      
       @currentState = to
+      @initCurrentScene()
+      
       Mediator.trigger new createjs.Event('state:change:success')
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
-      background.cache(0, 0, @w, @h)
+      background.cache(0, 0, Config.w, Config.h)
       @stage.addChild(background)
 
     showFPS: ->
@@ -93,10 +108,10 @@ define [
     paintBorder: ->
       @border = new createjs.Shape
       color = "#4A4A4A"
-      @border.graphics.setStrokeStyle(@borderSize).beginStroke(color)
-      @border.graphics.drawRoundRect(@borderSize/2, @borderSize/2, @w - @borderSize, @h - @borderSize, 1)
+      @border.graphics.setStrokeStyle(Config.borderSize).beginStroke(color)
+      @border.graphics.drawRoundRect(Config.borderSize/2, Config.borderSize/2, Config.w - Config.borderSize, Config.h - Config.borderSize, 1)
       @border.graphics.endStroke()
-      @border.cache(0, 0, @w, @h)
+      @border.cache(0, 0, Config.w, Config.h)
       @stage.addChild(@border)
       
     tickHandler: (tick) ->
@@ -131,11 +146,13 @@ define [
       else
         state = 'htp'
       Mediator.trigger new createjs.Event('state:change', state)
+      @currentState == 'htp'
       
     pause: (e) ->
       e.preventDefault() if e
       state = if @currentState != 'pause' then 'pause' else 'game'
       Mediator.trigger new createjs.Event('state:change', state)
+      @currentState == 'pause'
     
     gameOver: ->
       e.preventDefault() if e
@@ -145,6 +162,7 @@ define [
     mute: (e) ->
       e.preventDefault() if e
       createjs.Sound.setMute(@isMute = !@isMute)
+      @isMute
 
     addScore: (points) ->
       @points += points
@@ -166,3 +184,13 @@ define [
       Mediator.on 'change:score:success', (e) =>
         createjs.Sound.play("success")
         
+    nextPhase: ->
+      @stats.strike = 0
+      @stats.timer = 0
+      @stats.errors = 0
+      _.each @stats.words, (word) =>
+        @stats.strike += word.strike
+        @stats.timer += word.timer
+        @stats.errors += word.errors
+      @stats.score = @points
+      localStorage.setItem "result", JSON.stringify(@stats)

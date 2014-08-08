@@ -2,10 +2,11 @@ define [
   'underscore'
   'config'
   'gamework'
-  'views/game'
+  'scenes/game'
   'game/views/simple_game_obj'
+  'helpers/mediator'
   'easel'
-], (_, Config, Gamework, Game, SimpleGameObj) ->
+], (_, Config, Gamework, Game, SimpleGameObj, Mediator) ->
   class SimpleGame extends Game
     
     animates:
@@ -18,18 +19,19 @@ define [
     
     render: ->
       @paintObjects()
-      
       @paitnScores()
       @showTime() if Config.needTime
-      @paitQuest()
+      @initObj()
+      @animateObjs()
       
-      @simpleGameObj = new SimpleGameObj @game
-      
-    afterShow: ->
-      @screen.addChild @simpleGameObj.screen
+    initObj: ->
+      @simpleGameObj = new SimpleGameObj @, @game
       @simpleGameObj.dispatchEvent 'show'
       
-      @animateObjs()
+      @simpleGameObj.on 'updated', =>
+        @simpleGameObj.destroy()
+        @initObj()
+        Mediator.trigger 'next:phase'
       
     animateObjs: ->
       _.each @animated_objs, (obj) =>

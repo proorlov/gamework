@@ -25,7 +25,7 @@ define [
       @txt.textBaseline = "alphabetic"
       @txt.setTransform 0, 10 
       
-      objContainer.setTransform @game.w/2, @game.h/2
+      objContainer.setTransform Config.w/2, Config.h/2
       
       objContainer.addChild shape, @txt
       

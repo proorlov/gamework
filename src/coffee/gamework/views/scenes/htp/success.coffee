@@ -1,7 +1,7 @@
 define [
   'underscore'
   'config'
-  'views/system'
+  'scenes/system'
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
@@ -31,7 +31,7 @@ define [
       playButtonTxt.setTransform 130, 45
       
       @playButton.addChild fon, playButtonTxt
-      @playButton.setTransform @game.w/2 - 160, @game.h/2+120
+      @playButton.setTransform Config.w/2 - 160, Config.h/2+120
       @playButton.cursor = "pointer"
       @playButton.on "mousedown", =>
         @game.restart()
@@ -47,5 +47,5 @@ define [
 
     beforeHide: ->
       @container.visible = false
-      createjs.Tween.get(@sysScreenA).to({x:-@game.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call => @hide()
+      createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
+      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()

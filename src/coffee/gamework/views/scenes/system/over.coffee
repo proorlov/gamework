@@ -1,7 +1,7 @@
 define [
   'underscore'
   'config'
-  'views/system'
+  'scenes/system'
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
@@ -18,12 +18,12 @@ define [
       total = new createjs.Text("Total score:", "120px "+Config.font2_bold, "#F1F1F1")
       total.textAlign = "center"
       total.textBaseline = "alphabetic"
-      total.setTransform(@game.w/2, 300)
+      total.setTransform(Config.w/2, 300)
       
       @score = score = new createjs.Text("#{@game.points} points", "120px "+Config.font2_thin, "#F1F1F1")
       score.textAlign = "center"
       score.textBaseline = "alphabetic"
-      score.setTransform(@game.w/2, 420)
+      score.setTransform(Config.w/2, 420)
       
       @buttons = new createjs.Container
       
@@ -38,7 +38,7 @@ define [
       txt.setTransform(163, 47)
       
       nextButton.addChild(fon, txt)
-      nextButton.setTransform(@game.w/2 - nextButton.getBounds().width/2, @game.h*0.7 - nextButton.getBounds().height/2)
+      nextButton.setTransform(Config.w/2 - nextButton.getBounds().width/2, Config.h*0.7 - nextButton.getBounds().height/2)
       nextButton.cursor = "pointer"
       nextButton.on "mousedown", =>
         @game.restart()
@@ -55,5 +55,5 @@ define [
 
     beforeHide: ->
       @buttons.visible = false
-      createjs.Tween.get(@sysScreenA).to({x:-@game.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call => @hide()
+      createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
+      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()

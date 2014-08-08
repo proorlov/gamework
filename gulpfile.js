@@ -29,6 +29,7 @@ gulp.task('requirejsBuild', function() {
 	    sound: "./vendor/soundjs-0.5.2.min",
 	    tween: "./vendor/tweenjs-0.5.1.min",
 	    config: "./js/config",
+	    scenes: "./js/gamework/views/scenes",
 	    views: "./js/gamework/views",
     	helpers: "./js/gamework/helpers",
 	    gamework: './js/gamework/gamework',

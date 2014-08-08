@@ -1,21 +1,32 @@
 define [
   'gamework'
-  'game/views/htp'
-  'game/views/game'
-  'views/system/pause'
-  'views/system/over'
-  'views/system/wait'
-  'views/htp/success'
-], (Gamework, HTPScreen, GameScreen, PauseScreen, OverScreen, WaitScreen, SuccessScreen) ->
-  
+  'scenes/system/wait'
+  'scenes/system/pause'
+  'scenes/system/over'
+  'game/views/scenes/htp'
+  'scenes/htp/success'
+  'game/views/scenes/game'
+], (Gamework, WaitScene, PauseScene, OverScene, HTPScene, HTPSuccessScene, GameScene) ->
   # simple Game
   
   class Game extends Gamework
     
-    initScreens: ->
-      @screens['game'] = new GameScreen @
-      @screens['wait'] = new WaitScreen @
-      @screens['htp'] = new HTPScreen @
-      @screens['pause'] = new PauseScreen @
-      @screens['over'] = new OverScreen @
-      @screens['htp:success'] = new SuccessScreen @
+    #Override
+    initStates: ->
+      @states =
+        'wait':  ['game']
+        'game':  ['htp', 'pause', 'over']
+        'htp':   ['game', 'htp:success']
+        'pause': ['game']
+        'over':  ['game']
+        'htp:success':  ['game']
+      
+    #Override
+    initsScenes: ->
+      @scenes = 
+        'wait':         WaitScene
+        'game':         GameScene
+        'htp':          HTPScene
+        'htp:success':  HTPSuccessScene
+        'pause':        PauseScene
+        'over':         OverScene

@@ -1,6 +1,14 @@
 define [
   'easel'], ->
+ 
   class Config
+
+    w: 1248
+    h: 794
+    borderSize: 12
+    w2: Config::w - Config::borderSize
+    h2: Config::h - Config::borderSize
+    
     manifest: [
       {src: 'res/img/bg.jpg', id: 'background'},
       {src: 'res/img/button.png', id: 'button'},

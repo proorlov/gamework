@@ -1,7 +1,7 @@
 define [
   'underscore'
   'config'
-  'views/game'
+  'scenes/game'
   'easel'
 ], (_, Config, Game) ->
   class HTP extends Game
@@ -12,7 +12,6 @@ define [
     render: ->
       @paintObjects()
       @renderSupport()
-      @paitQuest()
 
     #override
     renderSupport: -> false

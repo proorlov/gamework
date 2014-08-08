@@ -8,6 +8,7 @@ requirejs.config
     tween: "./../vendor/tweenjs-0.5.1.min"
     config: "/js/config"
     views: "/js/gamework/views"
+    scenes: "/js/gamework/views/scenes"
     helpers: "/js/gamework/helpers"
     gamework: '/js/gamework/gamework'
     layouts: "/js/app/layouts"
@@ -23,7 +24,7 @@ requirejs.config
 
 require ["jquery", "js/game/index.js"], ($, game) ->
   $ ->
-    gamework = new game
+    window.gamework = new game
     
     $('#pause').on 'click', (e) -> gamework.pause(e)
     $('#htp').on 'click', (e) -> gamework.how(e)

@@ -1,7 +1,7 @@
 define [
   'underscore'
   'config'
-  'views/system'
+  'scenes/system'
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
@@ -22,7 +22,7 @@ define [
       @countDown = new createjs.Text( @value(), "250px "+Config.font2_semibold, "#FFFFFF" )
       @countDown.textAlign = "center"
       @countDown.textBaseline = "alphabetic"
-      @countDown.setTransform(@game.w/2, @game.h/2)
+      @countDown.setTransform(Config.w/2, Config.h/2)
       
       @sysScreen.addChild @countDown
     

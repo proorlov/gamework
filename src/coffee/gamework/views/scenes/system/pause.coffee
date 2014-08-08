@@ -1,7 +1,7 @@
 define [
   'underscore'
   'config'
-  'views/system'
+  'scenes/system'
   'helpers/mediator'
   'easel'
 ], (_, Config, System, Mediator) ->
@@ -21,7 +21,7 @@ define [
       txt.setTransform(163, 47)
       
       workoutButton.addChild(fon, txt)
-      workoutButton.setTransform(100, @game.h/2 - workoutButton.getBounds().height/2)
+      workoutButton.setTransform(100, Config.h/2 - workoutButton.getBounds().height/2)
       workoutButton.cursor = "pointer"
       workoutButton.on "mousedown", => console.log("back to workout")
 
@@ -35,7 +35,7 @@ define [
       txt.setTransform(163, 47)
       
       replayButton.addChild(fon, txt)
-      replayButton.setTransform(@game.w/2 - replayButton.getBounds().width/2, @game.h/2 - replayButton.getBounds().height/2)
+      replayButton.setTransform(Config.w/2 - replayButton.getBounds().width/2, Config.h/2 - replayButton.getBounds().height/2)
       replayButton.cursor = "pointer"
       replayButton.on "mousedown", =>
         @game.restart()
@@ -51,7 +51,7 @@ define [
       txt.setTransform(163, 47)
       
       resumeButton.addChild(fon, txt)
-      resumeButton.setTransform(@game.w - 429, @game.h/2 - resumeButton.getBounds().height/2)
+      resumeButton.setTransform(Config.w - 429, Config.h/2 - resumeButton.getBounds().height/2)
       resumeButton.cursor = "pointer"
       resumeButton.on "mousedown", => @game.pause()
       
@@ -67,5 +67,5 @@ define [
 
     beforeHide: ->
       @buttons.visible = false
-      createjs.Tween.get(@sysScreenA).to({x:-@game.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:@game.w2/2}, @t).call => @hide()
+      createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
+      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()
