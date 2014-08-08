@@ -12,7 +12,7 @@ requirejs.config
     helpers: "/js/gamework/helpers"
     gamework: '/js/gamework/gamework'
     layouts: "/js/app/layouts"
-    game: "/js/game"
+    game: "/js/simplegame/index"
   shim:
     jquery:
       exports: 'jQuery'
@@ -22,7 +22,7 @@ requirejs.config
       deps: ['preload', 'tween', 'sound'],
       exports: 'easel'
 
-require ["jquery", "js/simplegame/index.js"], ($, game) ->
+require ["jquery", "game"], ($, game) ->
   $ ->
     window.gamework = new game
     
