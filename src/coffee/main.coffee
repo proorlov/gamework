@@ -22,7 +22,7 @@ requirejs.config
       deps: ['preload', 'tween', 'sound'],
       exports: 'easel'
 
-require ["jquery", "js/game/index.js"], ($, game) ->
+require ["jquery", "js/simplegame/index.js"], ($, game) ->
   $ ->
     window.gamework = new game
     
