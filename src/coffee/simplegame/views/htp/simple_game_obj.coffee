@@ -1,7 +1,7 @@
 define [
   'config'
   'helpers/mediator'
-  'game/views/simple_game_obj'
+  'simplegame/views/simple_game_obj'
 ], (Config, Mediator, SimpleGameObj) ->
   class HTPGameObj extends SimpleGameObj
     

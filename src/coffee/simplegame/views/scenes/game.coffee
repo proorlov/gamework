@@ -3,7 +3,7 @@ define [
   'config'
   'gamework'
   'scenes/game'
-  'game/views/simple_game_obj'
+  'simplegame/views/simple_game_obj'
   'helpers/mediator'
   'easel'
 ], (_, Config, Gamework, Game, SimpleGameObj, Mediator) ->

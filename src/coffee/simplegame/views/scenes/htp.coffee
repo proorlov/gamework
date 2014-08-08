@@ -1,6 +1,6 @@
 define [
   'scenes/htp'
-  'game/views/htp/simple_game_obj'
+  'simplegame/views/htp/simple_game_obj'
 ], (HTP, SimpleGameObj) ->
   class HTPSimple extends HTP
     
