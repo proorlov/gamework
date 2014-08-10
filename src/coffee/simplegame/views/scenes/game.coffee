@@ -21,10 +21,10 @@ define [
       @paintObjects()
       @paitnScores()
       @showTime() if Config.needTime
-      @initObj()
+      @paintGameObj()
       @animateObjs()
       
-    initObj: ->
+    paintGameObj: ->
       @simpleGameObj = new SimpleGameObj @, @game
       @simpleGameObj.dispatchEvent 'show'
       
