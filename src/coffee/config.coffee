@@ -11,27 +11,41 @@ define [
     
     manifest: [
       {src: 'res/img/bg.jpg', id: 'background'},
+      
       {src: 'res/img/button.png', id: 'button'},
       {src: 'res/img/button_green.png', id: 'button_green'},
+      
       {src: 'res/img/home1.png', id: 'home1'},
       {src: 'res/img/home2.png', id: 'home2'},
       {src: 'res/img/home3.png', id: 'home3'},
       {src: 'res/img/home4.png', id: 'home4'},
       {src: 'res/img/home5.png', id: 'home5'},
       {src: 'res/img/home6.png', id: 'home6'},
+      
+      {src: 'res/img/professions/billboard_1.png', id: 'billboard_1'},
+      {src: 'res/img/professions/billboard_2.png', id: 'billboard_2'},
+      {src: 'res/img/professions/billboard_3.png', id: 'billboard_3'},
+      {src: 'res/img/professions/billboard_4.png', id: 'billboard_4'},
+      {src: 'res/img/professions/billboard_5.png', id: 'billboard_5'},
+      
       {src: 'res/img/cloud1.png', id: 'cloud_top'},
       {src: 'res/img/cloud2.png', id: 'cloud'},
+      
       {src: 'res/img/tree1.png', id: 'tree1'},
       {src: 'res/img/tree2.png', id: 'tree2'},
       {src: 'res/img/tree3.png', id: 'tree3'},
       {src: 'res/img/tree4.png', id: 'tree4'},
+      
       {src: 'res/img/birds1.png', id: 'birds1'},
       {src: 'res/img/birds2.png', id: 'birds2'},
+      
       {src: 'res/img/car1.png', id: 'car1'},
       {src: 'res/img/car2.png', id: 'car2'},
       {src: 'res/img/car3.png', id: 'car3'},
       {src: 'res/img/car4.png', id: 'car4'},
+      
       {src: 'res/data.json', id: 'data'},
+      
       {src: 'res/sound/error_apple.wav', id: 'error'},
       {src: 'res/sound/music.wav', id: 'music'},
       {src: 'res/sound/score.wav', id: 'over'},
@@ -47,7 +61,7 @@ define [
 
     debug: true #fps and some console logs
     needTime: true
-    startTime: 3*1000
+    startTime: -1*1000
     gameTime: 60*1000
     
     points: 1
@@ -57,10 +71,17 @@ define [
       {x:  357, y: 607, scale: 1, img: 'tree2'}
       {x:  881, y: 566, scale: 1, img: 'tree3'}
       
+      {x:  490, y:  425, scale: 1, img: 'billboard_1'}
+      {x:  45, y:  517, scale: 1, img: 'billboard_2'}
+      
       {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 5000, distance: 500 },
       {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 3000, distance: 500 },
       {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 7000, distance: 500 },
       {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 6000, distance: 600 },
+      
+      {x:  932, y: 330, scale: 1, img: 'billboard_3'}  
+      {x:  125, y: 225, scale: 1, img: 'billboard_4'}     
+      {x:  665, y:  64, scale: 1, img: 'billboard_5'}
       
       {x:  158, y: 556, scale: 1, img: 'tree1'}
       {x: 1090, y: 581, scale: 1, img: 'tree4'}
