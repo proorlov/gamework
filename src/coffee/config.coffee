@@ -28,13 +28,27 @@ define [
       {src: 'res/img/professions/billboard_4.png', id: 'billboard_4'},
       {src: 'res/img/professions/billboard_5.png', id: 'billboard_5'},
       
-      {src: 'res/img/professions/doctor.jpg', id: 'doctor'},
-      {src: 'res/img/professions/adiner.jpg', id: 'adiner'},
-      {src: 'res/img/professions/driver.jpg', id: 'driver'},
-      {src: 'res/img/professions/lawyer.jpg', id: 'lawyer'},
-      {src: 'res/img/professions/photographer.jpg', id: 'photographer'},
-      {src: 'res/img/professions/policeman.jpg', id: 'policeman'},
-      {src: 'res/img/professions/receptionist.jpg', id: 'receptionist'},
+      {src: 'res/img/professions/doctor.png', id: 'doctor'},
+      {src: 'res/img/professions/adiner.png', id: 'adiner'},
+      {src: 'res/img/professions/driver.png', id: 'driver'},
+      {src: 'res/img/professions/lawyer.png', id: 'lawyer'},
+      {src: 'res/img/professions/photographer.png', id: 'photographer'},
+      {src: 'res/img/professions/policeman.png', id: 'policeman'},
+      {src: 'res/img/professions/receptionist.png', id: 'receptionist'},
+      {src: 'res/img/professions/administrator.png', id: 'administrator'},
+      {src: 'res/img/professions/assistant.png', id: 'assistant'},
+      {src: 'res/img/professions/firefighter.png', id: 'firefighter'},
+      {src: 'res/img/professions/judge.png', id: 'judge'},
+      {src: 'res/img/professions/nurse.png', id: 'nurse'},
+      {src: 'res/img/professions/student.png', id: 'student'},
+      {src: 'res/img/professions/teacher.png', id: 'teacher'},
+      {src: 'res/img/professions/waiter.png', id: 'waiter'},
+      {src: 'res/img/professions/worker.png', id: 'worker'},
+      
+      {src: 'res/img/professions/error.png', id: 'error_bg'},
+      
+      {src: 'res/img/professions/light.png', id: 'light'},
+      {src: 'res/img/professions/light_bg.png', id: 'light_bg'},
       
       {src: 'res/img/cloud1.png', id: 'cloud_top'},
       {src: 'res/img/cloud2.png', id: 'cloud'},
@@ -69,8 +83,9 @@ define [
 
     debug: true #fps and some console logs
     needTime: true
+
     startTime: -1*1000
-    gameTime: 10*1000
+    gameTime: 60*1000
     strike: 3*1000
     
     points: 10

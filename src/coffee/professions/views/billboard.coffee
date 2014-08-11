@@ -22,34 +22,43 @@ define [
       
       super
       
-    isCurrectWord: -> @parent.currentWord.id == @professionName
+    isCurrectWord: -> @parent.currentWord.id == @professionName.id
 
     undelegateEvents: ->
       @target.removeAllEventListeners()
 
     delegateEvents: ->
-      @target.addEventListener 'mouseover', => @animation.gotoAndPlay 'hover'
-      @target.addEventListener 'mouseout',  => @animation.gotoAndPlay 'normal'
+      @target.addEventListener 'mouseover', =>
+        @light.gotoAndPlay 'on'
+        @light_bg.visible = true
+
+      @target.addEventListener 'mouseout',  =>
+        @light.gotoAndPlay 'off'
+        @light_bg.visible = false
       
-      Mediator.on 'change:score:success', =>
-        @game.stats.words.push @stats
+      @on 'change:score:success', =>
+        @error.visible = false
+        @resetStats()
+        @game.stats.words.push(@stats) if @isCurrectWord()
         
-      Mediator.on 'change:score:error', => @error()
+      @on 'change:score:error', =>
+        @error_add() if @isCurrectWord()
+      
+      Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
+      Mediator.on 'change:score:error', => @dispatchEvent 'change:score:error'
       
       @target.addEventListener 'click', =>
-        @update()
-        Mediator.trigger new createjs.Event("billboard:choose", @)
+        @update() if @isCurrectWord()
+        @parent.chooseItem(@)
     
-    error: -> @stats.errors+=1
+    error_add: -> @stats.errors+=1
     
     update: ->
       timer = @game.gamingTime - @s_time
-      strike = if timer <= Config.strike && @errors == 0 then 1 else 0
-      
+      strike = if timer <= Config.strike && @stats.errors == 0 then 1 else 0
       @stats.score = @countPoint()
       @stats.strike = strike
       @stats.timer = timer
-      
       @
 
     countPoint: ->
@@ -68,42 +77,30 @@ define [
     render: ->
       @target = new createjs.Container
       
+      @profession = new createjs.Bitmap(@game.queue.getResult(@professionName.id))
+      @profession.setTransform( (155-@profession.getBounds().width/2), (120-@profession.getBounds().height/2) )
+      
+      @bg = new createjs.Shape()
+      @bg.graphics.beginFill(@professionName.color).drawRect(0, 0, 320, 240)
+      
       data = {
-        framerate: 3
-        images: [ @game.queue.getResult("#{@professionName}") ]
-        frames:
-          {
-            width:  320
-            height: 240
-            count:  3
-            regX:   0
-            regY:   0
-          }
-        animations: {
-          hover:  [ 0 ]
-          normal: [ 1 ]
-          error:  [ 2 ]
-        }
+        framerate:  2
+        images:     [ @game.queue.getResult('light') ]
+        frames:     { width:321, height:72, count:2, regX: 0, regY:0 }
+        animations: { off: [0], on: [1] }
       }
-          
-      spriteSheet = new createjs.SpriteSheet data
-      @animation = new createjs.Sprite spriteSheet, "normal"
       
-      @target.addChild @animation
+      @light = new createjs.Sprite(new createjs.SpriteSheet(data), "off")
+      @light_bg = new createjs.Bitmap(@game.queue.getResult('light_bg'))
+      @light_bg.visible = false
+      
+      @error = new createjs.Bitmap(@game.queue.getResult('error_bg'))
+      @error.visible = false
+      
       @target.setTransform @billboardPosition.x, @billboardPosition.y, @billboardPosition.scaleX, @billboardPosition.scaleY
-      
-      #if @parent.currentWord.id == @professionName
-      #  new Billboard @parent, @parent.nextWord.id, @billboardPosition
-      #  @box = box = new createjs.Shape()
-      #  width = 320
-      #  
-      #  box.graphics.beginFill("#FFFFFF").drawRect @billboardPosition.x, @billboardPosition.y, 10, 240*@billboardPosition.scaleY
-      #  
-      #  while width-=20 then do =>
-      #    box.graphics.beginFill("#FFFFFF").drawRect @billboardPosition.x+width, @billboardPosition.y, 10, 240*@billboardPosition.scaleY
-      #
-      # @target.AlphaMaskFilter = [new createjs.AlphaMaskFilter(@box)]
+      @light.setTransform 0, 170
 
+      @target.addChild @bg, @light_bg, @profession, @light, @error
       @screen.addChild @target 
       
     destroy: ->
@@ -111,18 +108,19 @@ define [
       @screen.removeAllEventListeners()
       @removeAllEventListeners()
       @screen.removeChild(@quest)
-      @parent.screen.removeChild @screen
+      @parent.bb_container.removeChild @screen
 
-    show: ->
-      @afterShow()
+    show: -> @afterShow()
       
-    afterShow: ->
-    
+    afterShow: -> @resetStats()
+      
+    resetStats: ->
       @stats =
-        word: @professionName
+        word: @professionName.id
         strike: 0
         score: 0
         errors: 0
         timer: 0
       
       @s_time = @game.gamingTime
+

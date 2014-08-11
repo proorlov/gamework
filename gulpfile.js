@@ -34,7 +34,9 @@ gulp.task('requirejsBuild', function() {
     	helpers: "./js/gamework/helpers",
 	    gamework: './js/gamework/gamework',
 	    layouts: "./js/app/layouts",
-	    game: "./js/game"
+	    game: "./js/professions/index",
+	    simplegame: "./js/simplegame",
+	    professions: "./js/professions"
   	},
     shim: {
       jquery: {

@@ -8,8 +8,8 @@ define [
   
   class SimpleGame extends SimpleGame
     
-    bbs: {}
     consecutive_strikes: 0
+    currentWords: []
     
     billboards:
       [
@@ -21,22 +21,30 @@ define [
       ]
     
     constructor: ->
+      @bbs = {}
       @quests = gamework.queue.getResult('data').quests
-      @getNextWord()
-      @getCurrentWord()
       super
     
+    undelegateEvents: ->
+      
+      
     delegateEvents: ->
-      super
-      Mediator.on "billboard:choose", (e) => @chooseItem(e)
-      Mediator.on 'change:score:success', => @reset()
+      Mediator.on 'change:score',         => @update()
+      Mediator.on 'change:score:success', => @next()
+      
+      @on "change:score:success", => @dispatchEvent "change:score:success"
+      @on "change:score",         => @dispatchEvent "change:score"
     
     render: ->
       @bb_container = new createjs.Container
-      
+  
       @paintObjects()
       @showTime() if Config.needTime
       @paintGameObj()
+      @getCurrentWord()
+       
+      @billboard = @bbs[@currentWord.id]
+ 
       @animateObjs()
       @paitQuest()
       @paitnScores()
@@ -44,17 +52,20 @@ define [
     paintGameObj: ->
       @quests.words = _.sortBy @quests.words, (word, i) => i < _.random( 0, @quests.words.length-1 )
       
+      @currentWords = []
+      
       _.each @quests.words, (word, i) =>
+        return unless _.has @billboards, i
+        @currentWords.push word
         position = @billboards[i]
         if @bbs[word.id]?
-          @bbs[word.id].animation.gotoAndPlay 'normal'
           @bbs[word.id].target.setTransform position.x, position.y, position.scaleX, position.scaleY
           @bbs[word.id].dispatchEvent 'show'
         else
-          @bbs[word.id] = new Billboard @, word.id, position
+          @bbs[word.id] = new Billboard @, word, position
           @bbs[word.id].dispatchEvent 'show'
         @bb_container.addChild @bbs[word.id].screen
-        @screen.addChild @bb_container
+      @screen.addChild @bb_container
       
     paitnScores: ->
       @scoreContainer = new createjs.Container
@@ -71,15 +82,23 @@ define [
       
       @scoreContainer.addChild(shape, @txt)
       @screen.addChild @scoreContainer
+    
+    reset: -> @next()
 
-    reset: ->
-      @bb_container.removeAllChildren()
-      @paintGameObj()
-      #createjs.Tween.get(@bbs[@currentWord.id].box).to({scaleX:-1}, 5000)
+    next: ->
+      @billboard.destroy()
+
       @getCurrentWord()
       @word.text = @currentWord.name
+      
+      word = @getRandomtWord()
+      @bbs[word.id] = new Billboard @, word, @billboard.billboardPosition
+      @bbs[word.id].dispatchEvent 'show'
+      
       @screen.removeChild @scoreContainer
       @paitnScores()
+      
+      @billboard = @bbs[@currentWord.id]
       
       Mediator.trigger 'next:phase'
         
@@ -97,23 +116,27 @@ define [
       @screen.addChild(@quest, @word)
     
     getCurrentWord: ->
-      @currentWord = @nextWord
-      @getNextWord()
+      @currentWords = _.without @currentWords, @currentWord
+      @currentWord = @currentWords[_.random( 0, @currentWords.length-1 )]
     
-    getNextWord: ->
-      a = _.without @quests.words, @currentWord
-      @nextWord = a[_.random( 0, a.length-1 )]
+    # getNextWord: ->
+      # a = _.without @currentWords, @currentWord
+      # @nextWord = a[_.random( 0, a.length-1 )]
     
-    chooseItem: (e) ->
-      @billboard = e.bubbles
+    getRandomtWord: ->
+      a = _.difference @quests.words, @currentWords
+      word = a[_.random( 0, a.length-1 )]
+      @currentWords.push word
+      word
+    
+    chooseItem: (bb) ->
       @updateStats()
-      if @billboard.isCurrectWord()
+      if bb.isCurrectWord()
         @timer = @game.gamingTime-@s_time
-        @game.addScore(@billboard.countPoint())
+        @game.addScore(bb.countPoint())
       else
         Mediator.trigger 'change:score:error'
-        @billboard.animation.gotoAndPlay 'error'
-          
+        bb.error.visible = true
       @consecutive_strikes
         
     updateStats: ->

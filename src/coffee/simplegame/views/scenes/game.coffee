@@ -30,7 +30,7 @@ define [
       
       @simpleGameObj.on 'updated', =>
         @simpleGameObj.destroy()
-        @initObj()
+        @paintGameObj()
         Mediator.trigger 'next:phase'
       
     animateObjs: ->
