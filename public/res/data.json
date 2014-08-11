@@ -1,5 +1,27 @@
 {
-    "quests": [
-        "Find a circle"
-    ]
+    "quests": {
+    	"quest": "Отгадай слово:",
+    	"words": [
+			{
+				"id": "doctor",
+				"name" : "Doctor"
+			},
+			{
+				"id": "lawyer",
+				"name" : "Lawyer"
+			},
+			{
+				"id": "policeman",
+				"name" : "Policeman"
+			},
+			{
+				"id": "photographer",
+				"name" : "Photographer"
+			},
+			{
+				"id": "driver",
+				"name" : "Driver"
+			}
+		]
+	}
 }

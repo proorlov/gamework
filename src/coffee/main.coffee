@@ -12,7 +12,7 @@ requirejs.config
     helpers: "/js/gamework/helpers"
     gamework: '/js/gamework/gamework'
     layouts: "/js/app/layouts"
-    game: "/js/simplegame/index"
+    game: "/js/professions/index"
   shim:
     jquery:
       exports: 'jQuery'

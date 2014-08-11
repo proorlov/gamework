@@ -28,6 +28,14 @@ define [
       {src: 'res/img/professions/billboard_4.png', id: 'billboard_4'},
       {src: 'res/img/professions/billboard_5.png', id: 'billboard_5'},
       
+      {src: 'res/img/professions/doctor.jpg', id: 'doctor'},
+      {src: 'res/img/professions/adiner.jpg', id: 'adiner'},
+      {src: 'res/img/professions/driver.jpg', id: 'driver'},
+      {src: 'res/img/professions/lawyer.jpg', id: 'lawyer'},
+      {src: 'res/img/professions/photographer.jpg', id: 'photographer'},
+      {src: 'res/img/professions/policeman.jpg', id: 'policeman'},
+      {src: 'res/img/professions/receptionist.jpg', id: 'receptionist'},
+      
       {src: 'res/img/cloud1.png', id: 'cloud_top'},
       {src: 'res/img/cloud2.png', id: 'cloud'},
       
@@ -62,9 +70,10 @@ define [
     debug: true #fps and some console logs
     needTime: true
     startTime: -1*1000
-    gameTime: 60*1000
+    gameTime: 10*1000
+    strike: 3*1000
     
-    points: 1
+    points: 10
 
     objects: [
       {x:  140, y: 2,   scale: 1, img: 'cloud_top'}
@@ -74,10 +83,10 @@ define [
       {x:  490, y:  425, scale: 1, img: 'billboard_1'}
       {x:  45, y:  517, scale: 1, img: 'billboard_2'}
       
-      {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 5000, distance: 500 },
-      {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 3000, distance: 500 },
-      {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 7000, distance: 500 },
-      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 6000, distance: 600 },
+      {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200 },
+      {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 13000, distance: 1200 },
+      {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 17000, distance: 1200 },
+      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 16000, distance: 1200 },
       
       {x:  932, y: 330, scale: 1, img: 'billboard_3'}  
       {x:  125, y: 225, scale: 1, img: 'billboard_4'}     
@@ -90,20 +99,20 @@ define [
       {x:  487, y: 103, scale: 1, img: 'home3'}     
       {x:  880, y: 105, scale: 1, img: 'home5'}
       
-      {x:181,  y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 400 },
+      {x:181,  y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 1200 },
       {x:   59, y: 244, scale: 1, img: 'home1'}
       {x: 1034, y: 244, scale: 1, img: 'home6'}
 
-      {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 600 },
-      {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 600 },
-      {x:227,  y:120, scale: 1, img: 'birds2', animate: 'right', duration: 25000, distance: 600 },
+      {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
+      {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
+      {x:227,  y:120, scale: 1, img: 'birds2', animate: 'right', duration: 25000, distance: 1200 },
     
-      {x:-59,  y:391, scale: 0.64, img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
-      {x:122,  y:209, scale: 0.58, img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
-      {x:553,  y:61,  scale: 1,    img: 'cloud', animate: 'left', duration: 55000, distance: 600 },
-      {x:671,  y:375, scale: 0.58, img: 'cloud', animate: 'left', duration: 35000, distance: 600 },
-      {x:976,  y:83,  scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 600 },
-      {x:1142, y:281, scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 600 },
+      {x:-59,  y:391, scale: 0.64, img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
+      {x:122,  y:209, scale: 0.58, img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
+      {x:553,  y:61,  scale: 1,    img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
+      {x:671,  y:375, scale: 0.58, img: 'cloud', animate: 'left', duration: 35000, distance: 1200 },
+      {x:976,  y:83,  scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200 },
+      {x:1142, y:281, scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200 },
     ]
 
   new Config
