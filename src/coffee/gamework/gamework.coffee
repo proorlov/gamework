@@ -125,7 +125,7 @@ define [
       if @currentState == 'game'
         @gamingTime += tick.delta
         if @screens['game'].timeLeft(@gamingTime) <= 0
-          Mediator.trigger new createjs.Event('state:change', "over")
+          @gameOver()
         else
           @screens['game'].updateTimer(@gamingTime)
       
@@ -140,7 +140,7 @@ define [
       Mediator.trigger new createjs.Event('change:score')
 
     how: (e) ->
-      e.preventDefault() if e
+      e.preventDefault() if e?
       if @currentState == 'htp' or @currentState == 'htp:success'
         state = 'game'
       else
@@ -149,18 +149,18 @@ define [
       @currentState == 'htp'
       
     pause: (e) ->
-      e.preventDefault() if e
+      e.preventDefault() if e?
       state = if @currentState != 'pause' then 'pause' else 'game'
       Mediator.trigger new createjs.Event('state:change', state)
       @currentState == 'pause'
     
     gameOver: ->
-      e.preventDefault() if e
+      e.preventDefault() if e?
       state = if @currentState != 'over' then 'over' else 'game'
       Mediator.trigger new createjs.Event('state:change', state)
     
     mute: (e) ->
-      e.preventDefault() if e
+      e.preventDefault() if e?
       createjs.Sound.setMute(@isMute = !@isMute)
       @isMute
 
