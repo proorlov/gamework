@@ -48,7 +48,7 @@ define [
     debug: true #fps and some console logs
     needTime: true
     startTime: 3*1000
-    gameTime: 1*1000
+    gameTime: 60*1000
     
     points: 1
 

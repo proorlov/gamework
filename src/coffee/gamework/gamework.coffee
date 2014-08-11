@@ -52,8 +52,8 @@ define [
         'wait':  ['game']
         'game':  ['htp', 'pause', 'over']
         'htp':   ['game', 'htp:success']
-        'pause': ['game']
-        'over':  ['game']
+        'pause': ['game', 'wait']
+        'over':  ['game', 'wait']
         'htp:success':  ['game']
       
     #Override
@@ -134,7 +134,7 @@ define [
       @stage.update()
       
     restart: ->
-      @downCounter = Config.startTime
+      @screens['wait'].downCounter = @downCounter = Config.startTime
       @gamingTime = 0
       @points = 0
       Mediator.trigger new createjs.Event('change:score')
