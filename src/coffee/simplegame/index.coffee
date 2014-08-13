@@ -16,10 +16,10 @@ define [
       @states =
         'wait':  ['game']
         'game':  ['htp', 'pause', 'over']
-        'htp':   ['game', 'htp:success']
+        'htp':   ['game', 'htp:success', 'wait']
         'pause': ['game', 'wait']
         'over':  ['game', 'wait']
-        'htp:success':  ['game']
+        'htp:success':  ['game', 'wait']
       
     #Override
     initsScenes: ->
