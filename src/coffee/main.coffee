@@ -25,6 +25,19 @@ requirejs.config
 require ["jquery", "game"], ($, game) ->
   $ ->
     window.gamework = new game
+
+    gamework.mediator.on 'game:start', ->
+      $('#pause').removeClass('disabled')
+      $('#htp').removeClass('disabled')
+      $('#mute').removeClass('disabled')
+
+    gamework.mediator.on 'state:change:success', =>
+    
+      if gamework.currentState == 'htp' or gamework.currentState == 'htp:success' then $('#htp').addClass('active') else $('#htp').removeClass('active')
+      if gamework.currentState == 'pause' then $('#pause').addClass('active') else $('#pause').removeClass('active')
+      
+    gamework.mediator.on 'change:mute', =>
+      if gamework.isMute then $('#mute').addClass('active') else $('#mute').removeClass('active')
     
     $('#pause').on 'click', (e) -> gamework.pause(e)
     $('#htp').on 'click', (e) -> gamework.how(e)

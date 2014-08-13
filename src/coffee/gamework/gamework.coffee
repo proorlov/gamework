@@ -28,6 +28,11 @@ define [
       words: []
     
     constructor: ->
+      @options = {}
+      @loadOptions()
+      
+      @mediator = Mediator
+      
       @initStates()
       @initsScenes()
       
@@ -71,6 +76,7 @@ define [
       @soundHandler()
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
       Mediator.on 'state:change', (event) => @changeState(event)
+      Mediator.trigger 'game:start'
       
     render: ->
       document.getElementById("gameworkLoading").style.display = "none"
@@ -147,11 +153,13 @@ define [
       else
         state = 'htp'
         Mediator.trigger new createjs.Event('state:change', state)
+      @currentState == 'htp'
       
     pause: (e) ->
       e.preventDefault() if e?
       state = if @currentState != 'pause' then 'pause' else 'game'
       Mediator.trigger new createjs.Event('state:change', state)
+      @currentState == 'pause'
     
     gameOver: ->
       e.preventDefault() if e?
@@ -160,7 +168,8 @@ define [
     
     mute: (e) ->
       e.preventDefault() if e?
-      createjs.Sound.setMute(@isMute = !@isMute)
+      @setMute(@isMute = !@isMute)
+      localStorage.setItem "options", JSON.stringify({ isMute: @isMute })
       @isMute
 
     addScore: (points) ->
@@ -181,6 +190,7 @@ define [
             createjs.Sound.stop()
           when 'wait'
             createjs.Sound.stop()
+        @setMute(@isMute)
                 
       Mediator.on 'change:score:success', (e) =>
         createjs.Sound.play("success")
@@ -194,4 +204,19 @@ define [
         @stats.timer += word.timer
         @stats.errors += word.errors
       @stats.score = @points
-      localStorage.setItem "result", JSON.stringify(@stats)
+      @saveResult()
+
+    ##
+    # override
+    #      
+    saveResult: -> localStorage.setItem "result", JSON.stringify(@stats)
+    ##
+    
+    loadOptions: ->
+      options = localStorage.getItem "options"
+      @options = JSON.parse options unless _.isNull options
+      @isMute = @options.isMute if _.has @options, 'isMute'
+      
+    setMute: (isMute) ->
+      createjs.Sound.setMute(isMute)
+      Mediator.trigger 'change:mute'

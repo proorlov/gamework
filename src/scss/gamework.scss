@@ -1,9 +1,17 @@
+body, html{
+  padding: 0;
+  margin: 0;
+}
+
 *{
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
 }
 
+.wrapper{
+  padding: 0px 200px
+}
 .gameworkDiv {
 	position: relative;
 }
@@ -20,11 +28,33 @@
     background-color: #ffffff;
 }
 .controls{
-  a{
-    background: #4a4a4a;
-    padding: 3px 10px;
-    margin: 2px;
-    color: #fff;
-    text-decoration: none;
+  text-align: right;
+  padding: 20px 0;
+  button{
+    font-family: 'pf_beausans_proregular';
+    background: none repeat scroll 0 0 #4A4A4A;
+    margin-left: 4px;
+    padding: 6px 10px 4px;
+    border-radius: 2px;
+    border: none;
+    color: #FFFFFF;
+    font-family: 'pf_beausans_proregular';
+    font-size: 12px;
+    line-height: 1;
+    text-transform: uppercase;
+    &.active{
+      background: none repeat scroll 0 0 #EA5151;
+    }
+    &.disabled{
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+    img{
+      margin-right: 7px;
+      vertical-align: middle;
+      border: 0 none;
+    }
   }
 }

@@ -8,11 +8,17 @@
     %link{href: "res/fonts/fonts.css", rel: "stylesheet"}/
     %script{ data-main: "js/main", src: "/vendor/require.js"}
   %body
-    %div.controls{style: "text-align: center;"}
-      %a#htp{href: "#" } how to play
-      %a#pause{href: "#" } pause
-      %a#mute{href: "#" } mute
-    %div{style: "padding: 10px 200px 10px 200px;"}
+    .wrapper
+      .controls
+        %button#htp.disabled
+          %img{height: "15", src: "img/setting_button_icon1.png"}/
+          how to play
+        %button#pause.disabled
+          %img{height: "15", src: "img/setting_button_icon2.png"}/
+          pause
+        %button#mute.disabled
+          %img{height: "15", src: "img/setting_button_icon3.png"}/
+          mute
       / start of gamework canvas
       .gameworkDiv
         #gameworkLoading.gameworkLoading
