@@ -26,7 +26,11 @@ define [
       
       @sysScreen.addChild @countDown
     
-    beforeShow: -> @show()
+    beforeShow: ->
+      @sysScreenA.x = 0
+      @sysScreenB.x = 0
+      @countDown.visible = true
+      @show()
 
     beforeHide: ->
       @countDown.visible = false

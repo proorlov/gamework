@@ -17,7 +17,7 @@ define [
         { x:  53,  y: 529, scaleX: 0.8, scaleY: 0.8 },
         { x:  942, y: 342, scaleX: 0.833, scaleY: 0.833 },
         { x:  135, y: 239, scaleX: 0.926, scaleY: 0.926 },     
-        { x:  674, y:  76, scaleX: 0.8, scaleY: 0.81 },
+        { x:  675, y:  76, scaleX: 0.8, scaleY: 0.805 },
       ]
     
     constructor: ->
@@ -27,12 +27,9 @@ define [
     
     undelegateEvents: ->
       
-      
+
     delegateEvents: ->
-      Mediator.on 'change:score',         => @update()
-      Mediator.on 'change:score:success', => @next()
-      
-      @on "change:score:success", => @dispatchEvent "change:score:success"
+      Mediator.on 'change:score', => @update()
       @on "change:score",         => @dispatchEvent "change:score"
     
     render: ->
@@ -40,68 +37,91 @@ define [
   
       @paintObjects()
       @showTime() if Config.needTime
-      @paintGameObj()
-      @getCurrentWord()
+      
+      @getWords()
+      @paintGameObjs()
        
       @billboard = @bbs[@currentWord.id]
+      @billboard.paitMask()
  
       @animateObjs()
       @paitQuest()
       @paitnScores()
-      
-    paintGameObj: ->
+    
+    getWords: ->
       @quests.words = _.sortBy @quests.words, (word, i) => i < _.random( 0, @quests.words.length-1 )
-      
       @currentWords = []
+      for i in [0..4]
+        do => @currentWords.push @quests.words[i]
+      @currentWord = @getNextWord()
+    
+    paintGameObjs: ->
+      _.each @currentWords, (word, i) =>
+        params = {word: word, position: @billboards[i]}
+        @paintGameObj(params)
+        
+      @paintGameObj({ word: @wordToAdd = @getRandomtWord(), position:@bbs[@currentWord.id].params.position })
       
-      _.each @quests.words, (word, i) =>
-        return unless _.has @billboards, i
-        @currentWords.push word
-        position = @billboards[i]
-        if @bbs[word.id]?
-          @bbs[word.id].target.setTransform position.x, position.y, position.scaleX, position.scaleY
-          @bbs[word.id].dispatchEvent 'show'
-        else
-          @bbs[word.id] = new Billboard @, word, position
-          @bbs[word.id].dispatchEvent 'show'
-        @bb_container.addChild @bbs[word.id].screen
       @screen.addChild @bb_container
       
+    paintGameObj: (params) ->
+      @bbs[params.word.id] = new Billboard @, params 
+      @bbs[params.word.id].dispatchEvent 'show'
+      @bb_container.addChildAt @bbs[params.word.id].screen, 0
+      
+    update: -> @points.text = "#{gamework.points} points"
+
     paitnScores: ->
       @scoreContainer = new createjs.Container
       
       shape = new createjs.Shape
-      shape.graphics.beginFill("rgba(0,0,0,0.5)").drawRoundRectComplex 0, 0, 350, 120, 0, 0, 0, 10
+      shape.graphics.beginFill("rgba(0,0,0,0.5)").drawRoundRectComplex 0, 0, 350, 105, 0, 0, 0, 10
       
-      @txt = new createjs.Text("your score: #{gamework.points}", "30px "+Config.font2_reg, "#FFF")
-      @txt.textAlign = "left"
-      @txt.textBaseline = "alphabetic"
-      @txt.setTransform 70, 65
+      ys = new createjs.Text("your score:", "23px "+Config.font2_reg, "#FFF")
+      ys.textAlign = "left"
+      ys.textBaseline = "alphabetic"
+      ys.setTransform 50, 55
+      
+      @points = new createjs.Text("#{gamework.points} points", "30px "+Config.font2_bold, "#FFF")
+      @points.textAlign = "left"
+      @points.textBaseline = "alphabetic"
+      @points.setTransform 180, 55
+      
+      @strikeContainer = new createjs.Container
+      @strikeContainer.visible = false
+      
+      woohoo = new createjs.Text("WOOHOO!", "20px "+Config.font2_reg, "#FFF")
+      woohoo.textAlign = "left"
+      woohoo.textBaseline = "alphabetic"
+      woohoo.setTransform 68, 85
+      
+      superSpeed = new createjs.Text("SUPERSPEED!", "20px "+Config.font2_bold, "#FFF")
+      superSpeed.textAlign = "left"
+      superSpeed.textBaseline = "alphabetic"
+      superSpeed.setTransform 168, 85
+      
+      @strikeContainer.addChild woohoo, superSpeed
       
       @scoreContainer.setTransform Config.w-Config.borderSize-350, 0 
       
-      @scoreContainer.addChild(shape, @txt)
+      @scoreContainer.addChild(shape, ys, @points, @strikeContainer)
       @screen.addChild @scoreContainer
     
-    reset: -> @next()
-
     next: ->
-      @billboard.destroy()
-
-      @getCurrentWord()
-      @word.text = @currentWord.name
+      delete @bbs[@currentWord.id]
+      @currentWords.push @wordToAdd if @wordToAdd?
+      @wordToAdd = null
+      @currentWords = _.difference @currentWords, [@currentWord]
       
-      word = @getRandomtWord()
-      @bbs[word.id] = new Billboard @, word, @billboard.billboardPosition
-      @bbs[word.id].dispatchEvent 'show'
+      @billboard = @bbs[@nextWord.id]
+      @billboard.paitMask()
       
-      @screen.removeChild @scoreContainer
-      @paitnScores()
+      @wordToAdd = @getRandomtWord()
       
-      @billboard = @bbs[@currentWord.id]
+      @paintGameObj({ word: @wordToAdd, position:@bbs[@nextWord.id].params.position })
       
       Mediator.trigger 'next:phase'
-        
+      
     paitQuest: ->
       @quest = new createjs.Text @quests.quest, "23px "+Config.font2_reg, "#4C4C4C"
       @quest.textAlign = "left"
@@ -115,32 +135,35 @@ define [
       
       @screen.addChild(@quest, @word)
     
-    getCurrentWord: ->
-      @currentWords = _.without @currentWords, @currentWord
-      @currentWord = @currentWords[_.random( 0, @currentWords.length-1 )]
-    
-    # getNextWord: ->
-      # a = _.without @currentWords, @currentWord
-      # @nextWord = a[_.random( 0, a.length-1 )]
+    getNextWord: ->
+      a = _.difference @currentWords, [@wordToAdd, @currentWord]
+      a[_.random( 0, a.length-1 )]
     
     getRandomtWord: ->
-      a = _.difference @quests.words, @currentWords
-      word = a[_.random( 0, a.length-1 )]
-      @currentWords.push word
-      word
+      a = _.difference @quests.words, @currentWords, [@wordToAdd]
+      a[_.random( 0, a.length-1 )]
     
     chooseItem: (bb) ->
       @updateStats()
       if bb.isCurrectWord()
-        @timer = @game.gamingTime-@s_time
         @game.addScore(bb.countPoint())
+        
+        @nextWord = @getNextWord()
+        @next()
+
+        @timer = @game.gamingTime-@s_time
+        
+        @currentWord = @nextWord
+        @word.text = @currentWord.name
       else
         Mediator.trigger 'change:score:error'
-        bb.error.visible = true
+        bb.errorShow()
       @consecutive_strikes
         
     updateStats: ->
-      if @billboard.stats.strike > 0 && @billboard.stats.errors < 1
+      if @billboard.stats.strike > 0
         @consecutive_strikes += @billboard.stats.strike
+        @strikeContainer.visible = true
       else
+        @strikeContainer.visible = false
         @consecutive_strikes = 0

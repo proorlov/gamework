@@ -84,7 +84,7 @@ define [
     debug: true #fps and some console logs
     needTime: true
 
-    startTime: -1*1000
+    startTime: 3*1000
     gameTime: 60*1000
     strike: 3*1000
     

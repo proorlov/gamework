@@ -17,8 +17,8 @@ define [
         'wait':  ['game']
         'game':  ['htp', 'pause', 'over']
         'htp':   ['game', 'htp:success']
-        'pause': ['game']
-        'over':  ['game']
+        'pause': ['game', 'wait']
+        'over':  ['game', 'wait']
         'htp:success':  ['game']
       
     #Override

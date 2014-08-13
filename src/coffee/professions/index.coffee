@@ -20,7 +20,7 @@ define [
       @screens['game'].destroy()
       @currentScene = @screens['game'] = new GameScene @
       
-    gameOver: ->
+    nextPhase: ->
       @stats.strike = 0
       @stats.timer = 0
       @stats.errors = 0

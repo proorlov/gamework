@@ -16,21 +16,22 @@ define [
       errors: 0
       timer: 0
 
-    constructor: (parent, professionName, billboardPosition) ->
-      @billboardPosition = billboardPosition
-      @professionName = professionName
-      
+    constructor: (parent, params) ->
+      @params = params
       super
       
-    isCurrectWord: -> @parent.currentWord.id == @professionName.id
+    isCurrectWord: -> @parent.currentWord.id == @params.word.id
 
     undelegateEvents: ->
       @target.removeAllEventListeners()
+      @screen.removeAllEventListeners()
+      @removeAllEventListeners()
 
     delegateEvents: ->
       @target.addEventListener 'mouseover', =>
-        @light.gotoAndPlay 'on'
-        @light_bg.visible = true
+        unless @error.visible
+          @light.gotoAndPlay 'on'
+          @light_bg.visible = true
 
       @target.addEventListener 'mouseout',  =>
         @light.gotoAndPlay 'off'
@@ -39,9 +40,11 @@ define [
       @on 'change:score:success', =>
         @error.visible = false
         @resetStats()
-        @game.stats.words.push(@stats) if @isCurrectWord()
+        if @isCurrectWord()
+          @animateMask()
         
       @on 'change:score:error', =>
+        @error.visible = false
         @error_add() if @isCurrectWord()
       
       Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
@@ -59,6 +62,7 @@ define [
       @stats.score = @countPoint()
       @stats.strike = strike
       @stats.timer = timer
+      @game.stats.words.push(@stats)
       @
 
     countPoint: ->
@@ -76,12 +80,13 @@ define [
     
     render: ->
       @target = new createjs.Container
+      @billboard = new createjs.Container
       
-      @profession = new createjs.Bitmap(@game.queue.getResult(@professionName.id))
+      @profession = new createjs.Bitmap(@game.queue.getResult(@params.word.id))
       @profession.setTransform( (155-@profession.getBounds().width/2), (120-@profession.getBounds().height/2) )
       
       @bg = new createjs.Shape()
-      @bg.graphics.beginFill(@professionName.color).drawRect(0, 0, 320, 240)
+      @bg.graphics.beginFill(@params.word.color).drawRect(0, 0, 320, 240)
       
       data = {
         framerate:  2
@@ -97,16 +102,41 @@ define [
       @error = new createjs.Bitmap(@game.queue.getResult('error_bg'))
       @error.visible = false
       
-      @target.setTransform @billboardPosition.x, @billboardPosition.y, @billboardPosition.scaleX, @billboardPosition.scaleY
+      @target.setTransform @params.position.x, @params.position.y, @params.position.scaleX, @params.position.scaleY
       @light.setTransform 0, 170
-
-      @target.addChild @bg, @light_bg, @profession, @light, @error
+      
+      @billboard.addChild @bg, @light_bg, @profession
+      @target.addChild @billboard, @light, @error
       @screen.addChild @target 
       
+    paitMask: ->
+      width = 20
+      @box = new createjs.Shape()
+      @paintBoxForMask(width)
+      @target.mask = @box
+      
+    animateMask: ->
+      width = 20
+      @interval = setInterval (
+        =>
+          @box.graphics.clear()
+          width -= 1
+          if width <= 0
+            @destroy()
+            clearInterval @interval
+          @paintBoxForMask(width)
+       ), 35
+    
+    paintBoxForMask: (widthCell, box) ->
+      @box.setTransform @params.position.x, @params.position.y, @params.position.scaleX, @params.position.scaleY
+      @box.graphics.beginFill("#FFFFFF").drawRect 0, 0, widthCell*@params.position.scaleX, 240
+      x = 0
+      while x < 320 then do =>
+        @box.graphics.beginFill("#FFFFFF").drawRect x, 0, widthCell*@params.position.scaleX, 240
+        x+=20*@params.position.scaleX
+     
     destroy: ->
       @undelegateEvents()
-      @screen.removeAllEventListeners()
-      @removeAllEventListeners()
       @screen.removeChild(@quest)
       @parent.bb_container.removeChild @screen
 
@@ -116,7 +146,7 @@ define [
       
     resetStats: ->
       @stats =
-        word: @professionName.id
+        word: @params.word.id
         strike: 0
         score: 0
         errors: 0
@@ -124,3 +154,7 @@ define [
       
       @s_time = @game.gamingTime
 
+    errorShow: ->
+      @error.visible = true
+      @light.gotoAndPlay 'off'
+      @light_bg.visible = false
