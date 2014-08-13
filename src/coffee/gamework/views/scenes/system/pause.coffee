@@ -40,7 +40,6 @@ define [
       replayButton.on "mousedown", =>
         @game.restart()
         @hide()
-        Mediator.trigger new createjs.Event('state:change', 'wait')
       
       resumeButton = new createjs.Container
       

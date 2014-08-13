@@ -40,9 +40,7 @@ define [
       nextButton.addChild(fon, txt)
       nextButton.setTransform(Config.w/2 - nextButton.getBounds().width/2, Config.h*0.7 - nextButton.getBounds().height/2)
       nextButton.cursor = "pointer"
-      nextButton.on "mousedown", =>
-        @game.restart()
-        Mediator.trigger new createjs.Event('state:change', 'game')
+      nextButton.on "mousedown", => @game.restart()
       
       @buttons.addChild(total, score, nextButton)
       

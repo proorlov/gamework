@@ -51,10 +51,10 @@ define [
       @states =
         'wait':  ['game']
         'game':  ['htp', 'pause', 'over']
-        'htp':   ['game', 'htp:success']
+        'htp':   ['game', 'htp:success', 'wait']
         'pause': ['game', 'wait']
         'over':  ['game', 'wait']
-        'htp:success':  ['game']
+        'htp:success':  ['game', 'wait']
       
     #Override
     initsScenes: ->
@@ -138,21 +138,20 @@ define [
       @gamingTime = 0
       @points = 0
       Mediator.trigger new createjs.Event('change:score')
+      Mediator.trigger new createjs.Event('state:change', 'wait')
 
     how: (e) ->
       e.preventDefault() if e?
       if @currentState == 'htp' or @currentState == 'htp:success'
-        state = 'game'
+        @restart()
       else
         state = 'htp'
-      Mediator.trigger new createjs.Event('state:change', state)
-      @currentState == 'htp'
+        Mediator.trigger new createjs.Event('state:change', state)
       
     pause: (e) ->
       e.preventDefault() if e?
       state = if @currentState != 'pause' then 'pause' else 'game'
       Mediator.trigger new createjs.Event('state:change', state)
-      @currentState == 'pause'
     
     gameOver: ->
       e.preventDefault() if e?

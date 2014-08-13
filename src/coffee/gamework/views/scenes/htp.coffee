@@ -7,7 +7,6 @@ define [
   class HTP extends Game
     
     delegateEvents: -> false
-    afterHide: -> @game.restart()
     
     render: ->
       @paintObjects()

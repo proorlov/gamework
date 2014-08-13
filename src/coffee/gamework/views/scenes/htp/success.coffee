@@ -33,9 +33,7 @@ define [
       @playButton.addChild fon, playButtonTxt
       @playButton.setTransform Config.w/2 - 160, Config.h/2+120
       @playButton.cursor = "pointer"
-      @playButton.on "mousedown", =>
-        @game.restart()
-        Mediator.trigger new createjs.Event('state:change', 'game')
+      @playButton.on "mousedown", => @game.restart()
       
       @container.addChild(title, txt, @playButton)
       
