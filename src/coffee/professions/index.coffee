@@ -10,9 +10,9 @@ define [
   
   class Game extends SimpleGame
     
-    constructor: ->
-      super
-      createjs.Sound.setMute(true)
+    # constructor: ->
+      # super
+      # createjs.Sound.setMute(true)
       
     initsScenes: ->
       super
@@ -22,10 +22,16 @@ define [
     nextPhase: -> false
     
     restart: ->
-      super
       @stats.words = []
+      @screens['wait'].downCounter = @downCounter = Config.startTime
+      @gamingTime = 0
+      @points = 0
+      Mediator.trigger new createjs.Event('change:score')
+      
       @screens['game'].destroy()
       @currentScene = @screens['game'] = new GameScene @
+      
+      Mediator.trigger new createjs.Event('state:change', 'wait')
       
     nextPhase: ->
       @stats.strike = 0
@@ -63,8 +69,12 @@ define [
       @fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps" if Config.debug
       
       @stage.update()
-      
-    restart: ->
-      @screens['wait'].downCounter = @downCounter = Config.startTime
-      @gamingTime = 0
-      @points = 0
+
+    how: (e) ->
+      e.preventDefault() if e?
+      if @currentState == 'htp' or @currentState == 'htp:success'
+        @restart()
+      else
+        @screens['htp'] = @currentScene = new @scenes['htp'] @
+        Mediator.trigger new createjs.Event('state:change', 'htp')
+

@@ -12,11 +12,7 @@ define [
     update: -> false
       
     afterShow: ->
-      console.log 'afterShow'
-      #setTimeout @highlight, 2000
-      
-    afterHide: ->
-      @game.restart()
+      setTimeout (=> @highlight()), 2000
       
     paintGameObj: (params) ->
       @bbs[params.word.id] = new Billboard @, params 
@@ -37,3 +33,10 @@ define [
       @screen.addChild(@quest, @word)
       
     paitnScores: -> false
+    
+    highlight: ->
+      _.each @bbs, (bb) ->
+        createjs.Tween.get(bb.profession).to({alpha: 0.5}, 600) unless bb.isCurrectWord()
+      
+      @billboard.light.gotoAndPlay 'on'
+      @billboard.light_bg.visible = true

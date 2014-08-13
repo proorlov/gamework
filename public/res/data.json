@@ -4,83 +4,67 @@
     	"words": [
 			{
 				"id": "doctor",
-				"name" : "Doctor",
-				"color": "#d48a35"
+				"name" : "Doctor"
 			},
 			{
 				"id": "lawyer",
-				"name" : "Lawyer",
-				"color": "#5b78b4"
+				"name" : "Lawyer"
 			},
 			{
 				"id": "policeman",
-				"name" : "Policeman",
-				"color": "#797979"
+				"name" : "Policeman"
 			},
 			{
 				"id": "photographer",
-				"name" : "Photographer",
-				"color": "#3d9ba5"
+				"name" : "Photographer"
 			},
 			{
 				"id": "driver",
-				"name" : "Driver",
-				"color": "#3ca675"
+				"name" : "Driver"
 			},
 			{
 				"id": "adiner",
-				"name" : "Eat dinner",
-				"color": "#5b78b4"
+				"name" : "Eat dinner"
 			},
 			{
 				"id": "receptionist",
-				"name" : "Receptionist",
-				"color": "#707070"
+				"name" : "Receptionist"
 			},
 			{
 				"id": "administrator",
-				"name" : "Secretary",
-				"color": "#d0cccc"
+				"name" : "Secretary"
 			},
 			{
 				"id": "assistant",
-				"name" : "Shop assistant",
-				"color": "#4a4a4a"
+				"name" : "Shop assistant"
 			},
 			{
 				"id": "firefighter",
-				"name" : "Firefighter",
-				"color": "#3c9ba6"
+				"name" : "Firefighter"
 			},
 			{
 				"id": "judge",
-				"name" : "Judge",
-				"color": "#707070"
+				"name" : "Judge"
 			},
 			{
 				"id": "nurse",
-				"name" : "Nurse",
-				"color": "#5b78b4"
+				"name" : "Nurse"
 			},
 			{
 				"id": "student",
-				"name" : "Student",
-				"color": "#3c9ba6"
+				"name" : "Student"
 			},
 			{
 				"id": "teacher",
-				"name" : "Teacher",
-				"color": "#3c9ba6"
+				"name" : "Teacher"
 			},
 			{
 				"id": "waiter",
-				"name" : "Waiter",
-				"color": "#3ca675"
+				"name" : "Waiter"
 			},
 			{
 				"id": "worker",
-				"name" : "Factory worker",
-				"color": "#5b78b4"
+				"name" : "Factory worker"
 			}
 		]
 	}

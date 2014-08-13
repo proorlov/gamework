@@ -84,11 +84,46 @@ define [
     debug: true #fps and some console logs
     needTime: true
 
-    startTime: -1*1000
+    startTime: 3*1000
     gameTime: 60*1000
+    nextWordTime: 2*1000
     strike: 3*1000
     
     points: 10
+
+    game_objs:
+      doctor:
+        color: "#d48a35"
+      lawyer:
+        color: "#5b78b4"
+      policeman:
+        color: "#797979"
+      photographer:
+        color: "#3d9ba5"
+      driver:
+        color: "#3ca675"
+      adiner:
+        color: "#5b78b4"
+      receptionist:
+        color: "#707070"
+      administrator:
+        color: "#d0cccc"
+      assistant:
+        color: "#4a4a4a"
+      firefighter:
+        color: "#3c9ba6"
+      judge:
+        color: "#707070"
+      nurse:
+        color: "#5b78b4"
+      student:
+        color: "#3c9ba6"
+      teacher:
+        color: "#3c9ba6"
+      waiter:
+        color: "#3ca675"
+      worker:
+        color: "#5b78b4"
 
     objects: [
       {x:  140, y: 2,   scale: 1, img: 'cloud_top'}

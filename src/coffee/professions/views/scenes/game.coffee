@@ -144,22 +144,22 @@ define [
       a = _.difference @quests.words, @currentWords, [@wordToAdd]
       a[_.random( 0, a.length-1 )]
     
-    chooseItem: (bb) ->
+    chooseCurrectItem: (bb) ->
       @updateStats()
-      if bb.isCurrectWord()
-        @game.addScore(bb.countPoint())
-        
-        @nextWord = @getNextWord()
-        @next()
-
-        @timer = @game.gamingTime-@s_time
-        
-        @currentWord = @nextWord
-        @word.text = @currentWord.name
-      else
-        Mediator.trigger 'change:score:error'
-        bb.errorShow()
-      @consecutive_strikes
+      @game.addScore(bb.countPoint())
+          
+      @nextWord = @getNextWord()
+      @next()
+  
+      @timer = @game.gamingTime-@s_time
+      
+      @currentWord = @nextWord
+      @word.text = @currentWord.name
+    
+    chooseNotCurrectItem: (bb) ->
+      @updateStats()
+      Mediator.trigger 'change:score:error'
+      bb.errorShow()
         
     updateStats: ->
       # _.each @objs_groups.cars, (obj) ->

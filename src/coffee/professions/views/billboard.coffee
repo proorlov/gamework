@@ -10,18 +10,36 @@ define [
   class Billboard extends SimpleGameObj
 
     constructor: (parent, params) ->
-    
       @stats =
         word: ""
         strike: 0
         score: 0
         errors: 0
         timer: 0
-      
-      @params = params
+      @params = _.extend params, Config.game_objs[params.word.id]
       super
       
     isCurrectWord: -> @parent.currentWord.id == @params.word.id
+
+    targetDelegateEvents: ->
+      @target.addEventListener 'mouseover', =>
+        unless @error.visible
+          @light.gotoAndPlay 'on'
+          @light_bg.visible = true
+
+      @target.addEventListener 'mouseout',  =>
+        unless @success
+          @light.gotoAndPlay 'off'
+          @light_bg.visible = false
+      
+      @target.addEventListener 'click', =>
+        if @isCurrectWord()
+          @success = true
+          Mediator.trigger 'billboard:success'
+          setTimeout (=>@parent.chooseCurrectItem(@)), Config.nextWordTime
+        else
+          @parent.chooseNotCurrectItem(@)
+        @update()
 
     undelegateEvents: ->
       @target.removeAllEventListeners()
@@ -29,31 +47,29 @@ define [
       @removeAllEventListeners()
 
     delegateEvents: ->
-      @target.addEventListener 'mouseover', =>
-        unless @error.visible
-          @light.gotoAndPlay 'on'
-          @light_bg.visible = true
-
-      @target.addEventListener 'mouseout',  =>
-        @light.gotoAndPlay 'off'
-        @light_bg.visible = false
+      @targetDelegateEvents()
       
-      @on 'change:score:success', =>
-        @error.visible = false
-        @resetStats()
-        if @isCurrectWord()
-          @animateMask()
+      @on 'change:score:success', => @onChangeScoreSuccess()
         
       @on 'change:score:error', =>
         @error.visible = false
         @error_add() if @isCurrectWord()
+        
+      @on 'billboard:success', =>
+        @error.visible = false
+        @target.removeAllEventListeners()
+        createjs.Tween.get(@profession).to({alpha: 0.5}, 400) unless @isCurrectWord()
       
+      Mediator.on 'billboard:success', => @dispatchEvent 'billboard:success'
       Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
       Mediator.on 'change:score:error', => @dispatchEvent 'change:score:error'
-      
-      @target.addEventListener 'click', =>
-        @update() if @isCurrectWord()
-        @parent.chooseItem(@)
+    
+    onChangeScoreSuccess: ->
+      @targetDelegateEvents()
+      createjs.Tween.get(@profession).to({alpha: 1}, 400)
+      @error.visible = false
+      @resetStats()
+      @animateMask() if @isCurrectWord()
     
     error_add: -> @stats.errors+=1
     
@@ -87,7 +103,7 @@ define [
       @profession.setTransform( (155-@profession.getBounds().width/2), (120-@profession.getBounds().height/2) )
       
       @bg = new createjs.Shape()
-      @bg.graphics.beginFill(@params.word.color).drawRect(0, 0, 320, 240)
+      @bg.graphics.beginFill(@params.color).drawRect(0, 0, 320, 240)
       
       data = {
         framerate:  2
@@ -107,7 +123,7 @@ define [
       @light.setTransform 0, 170
       
       @billboard.addChild @bg, @light_bg, @profession
-      @target.addChild @billboard, @light, @error
+      @target.addChild @billboard, @error, @light
       @screen.addChild @target 
       
     paitMask: ->
