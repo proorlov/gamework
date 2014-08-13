@@ -179,6 +179,8 @@ define [
             createjs.Sound.play("over", loop: -1)
           when 'pause'
             createjs.Sound.stop()
+          when 'wait'
+            createjs.Sound.stop()
                 
       Mediator.on 'change:score:success', (e) =>
         createjs.Sound.play("success")
