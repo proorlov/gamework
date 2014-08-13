@@ -8,15 +8,16 @@ define [
 ], (_, Config, Base, Mediator, SimpleGameObj) ->
   
   class Billboard extends SimpleGameObj
-    
-    stats:
-      word: ""
-      strike: 0
-      score: 0
-      errors: 0
-      timer: 0
 
     constructor: (parent, params) ->
+    
+      @stats =
+        word: ""
+        strike: 0
+        score: 0
+        errors: 0
+        timer: 0
+      
       @params = params
       super
       

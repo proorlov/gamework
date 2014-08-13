@@ -84,7 +84,7 @@ define [
     debug: true #fps and some console logs
     needTime: true
 
-    startTime: 3*1000
+    startTime: -1*1000
     gameTime: 60*1000
     strike: 3*1000
     
@@ -98,10 +98,10 @@ define [
       {x:  490, y:  425, scale: 1, img: 'billboard_1'}
       {x:  45, y:  517, scale: 1, img: 'billboard_2'}
       
-      {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200 },
-      {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 13000, distance: 1200 },
-      {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 17000, distance: 1200 },
-      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 16000, distance: 1200 },
+      {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200, group: 'cars' },
+      {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 13000, distance: 1200, group: 'cars' },
+      {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 17000, distance: 1200, group: 'cars' },
+      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 16000, distance: 1200, group: 'cars' },
       
       {x:  932, y: 330, scale: 1, img: 'billboard_3'}  
       {x:  125, y: 225, scale: 1, img: 'billboard_4'}     

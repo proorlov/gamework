@@ -22,12 +22,13 @@ define [
     
     constructor: ->
       @bbs = {}
+      @objs_groups = {}
       @quests = gamework.queue.getResult('data').quests
       super
     
     undelegateEvents: ->
+      @removeAllEventListeners()
       
-
     delegateEvents: ->
       Mediator.on 'change:score', => @update()
       @on "change:score",         => @dispatchEvent "change:score"
@@ -161,9 +162,49 @@ define [
       @consecutive_strikes
         
     updateStats: ->
+      # _.each @objs_groups.cars, (obj) ->
+        # console.log obj.tween
+        
       if @billboard.stats.strike > 0
         @consecutive_strikes += @billboard.stats.strike
         @strikeContainer.visible = true
       else
         @strikeContainer.visible = false
         @consecutive_strikes = 0
+
+    paintDymamicObj: (obj) ->
+      el = new createjs.Bitmap(gamework.queue.getResult(obj.img))
+       
+      el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
+      @animated_objs.push {el: el, obj: obj}
+      
+      x = obj.x
+      x1 = while x<(Config.w+el.getBounds().width)
+        x+= obj.distance
+
+      x = obj.x
+      x = while x>0-el.getBounds().width
+        x-= obj.distance
+      
+      @screen.addChild(el)
+      
+      _.each _.union(x, x1), (x) =>
+        nel = el.clone()
+
+        nobj = _.clone(obj)
+        nobj.x = x
+        
+        nel.setTransform(nobj.x, nobj.y, nobj.scale, nobj.scale)
+
+        @animated_objs.push {el: nel, obj: nobj}
+        @screen.addChild(nel)
+      
+    animateObjs: ->
+      _.each @animated_objs, (obj) =>
+        animate = @animates[obj.obj.animate](obj.obj)
+        tween = createjs.Tween.get(obj.el, {loop:true})
+         .to(animate.props, animate.duration)
+
+        group = if _.has(obj.obj,'group') then obj.obj.group else 'base'
+        @objs_groups[group] ||= []
+        @objs_groups[group].push tween: tween, obj: obj.obj, el: obj.el
