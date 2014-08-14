@@ -10,6 +10,8 @@ define [
     
     consecutive_strikes: 0
     currentWords: []
+    strike_objs: 'cars_strike'
+    strikeState: false
     
     billboards:
       [
@@ -28,10 +30,15 @@ define [
     
     undelegateEvents: ->
       @removeAllEventListeners()
+      _.each @bbs, (bb) -> bb.destroy()
       
     delegateEvents: ->
-      Mediator.on 'change:score', => @update()
-      @on "change:score",         => @dispatchEvent "change:score"
+      Mediator.on 'change:score', => @dispatchEvent "change:score"
+      Mediator.on 'game:strike:on', => @dispatchEvent "game:strike:on"
+      Mediator.on 'game:strike:off', => @dispatchEvent "game:strike:off"
+      @on "change:score",    => @update()
+      @on "game:strike:on",  => @strikeOn()
+      @on "game:strike:off", => @strikeOff()
     
     render: ->
       @bb_container = new createjs.Container
@@ -70,7 +77,8 @@ define [
       @bbs[params.word.id].dispatchEvent 'show'
       @bb_container.addChildAt @bbs[params.word.id].screen, 0
       
-    update: -> @points.text = "#{gamework.points} points"
+    update: ->
+      @points.text = "#{gamework.points} points"
 
     paitnScores: ->
       @scoreContainer = new createjs.Container
@@ -145,8 +153,9 @@ define [
       a[_.random( 0, a.length-1 )]
     
     chooseCurrectItem: (bb) ->
-      @updateStats()
       @game.addScore(bb.countPoint())
+      
+      @updateStats()
           
       @nextWord = @getNextWord()
       @next()
@@ -157,23 +166,55 @@ define [
       @word.text = @currentWord.name
     
     chooseNotCurrectItem: (bb) ->
-      @updateStats()
       Mediator.trigger 'change:score:error'
       bb.errorShow()
+      @updateStats()
         
     updateStats: ->
-      # _.each @objs_groups.cars, (obj) ->
-        # console.log obj.tween
+      clearTimeout @srtikeTimer
+      timer = @game.gamingTime - @billboard.s_time
+      strike = if timer <= Config.strike && @billboard.stats.errors == 0 then 1 else 0
+      if strike
+        @consecutive_strikes += strike
+      else
+        @consecutive_strikes = 0
         
-      if @billboard.stats.strike > 0
-        @consecutive_strikes += @billboard.stats.strike
+      @srtikeTimer = setTimeout (=> Mediator.trigger 'game:strike:off'), Config.strike
+
+      if @isStrike()
         @strikeContainer.visible = true
+        Mediator.trigger 'game:strike:on'
       else
         @strikeContainer.visible = false
-        @consecutive_strikes = 0
+        Mediator.trigger 'game:strike:off'
+        
+    carsStrikeIn: ->
+      _.each @objs_groups[@strike_objs], (car) -> car.el.visible = true
+
+    carsStrikeOut: ->
+      _.each @objs_groups[@strike_objs], (car) -> car.el.visible = false
+
+    carsIn: ->
+      _.each @objs_groups.cars, (car) -> car.el.visible = true
+
+    carsOut: ->
+      _.each @objs_groups.cars, (car) -> car.el.visible = false
+#      handleChange = (car) =>
+#        @destroyCar(car) if car.el.x < -car.el.getBounds().width or car.el.x > Config.w
+#      
+#      _.each @objs_groups.cars, (car) =>
+#        if car.el.x > -car.el.getBounds().width and car.el.x < Config.w
+#          car.tween.addEventListener("change", => handleChange(car))
+#
+#        @destroyCar(car) if car.el.x < -car.el.getBounds().width or car.el.x > Config.w
+
+    destroyCar: (car) ->
+      createjs.Tween.removeTweens car.el
+      @screen.removeChild(car.el)
 
     paintDymamicObj: (obj) ->
       el = new createjs.Bitmap(gamework.queue.getResult(obj.img))
+      el.visible = false if obj.group == @strike_objs
        
       el.setTransform(obj.x, obj.y, obj.scale, obj.scale)
       @animated_objs.push {el: el, obj: obj}
@@ -208,3 +249,19 @@ define [
         group = if _.has(obj.obj,'group') then obj.obj.group else 'base'
         @objs_groups[group] ||= []
         @objs_groups[group].push tween: tween, obj: obj.obj, el: obj.el
+
+    isStrike: -> @consecutive_strikes >= Config.consecutive_strikes
+    
+    strikeOn: ->
+      return if @strikeState
+      @carsOut()
+      @carsStrikeIn()
+      @strikeState = true
+      Mediator.trigger 'game:strike:on:success'
+      
+    strikeOff: ->
+      return unless @strikeState
+      @carsIn()
+      @carsStrikeOut()
+      @strikeState = false
+      Mediator.trigger 'game:strike:off:success'

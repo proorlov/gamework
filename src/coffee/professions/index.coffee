@@ -32,24 +32,18 @@ define [
       @currentScene = @screens['game'] = new GameScene @
       
       Mediator.trigger new createjs.Event('state:change', 'wait')
-      
-    nextPhase: ->
-      @stats.strike = 0
-      @stats.timer = 0
-      @stats.errors = 0
-      
-      _.each @stats.words, (word) =>
-        @stats.strike += word.strike
-        @stats.timer += word.timer
-        @stats.errors += word.errors
-      @stats.score = @points
-      localStorage.setItem "result", JSON.stringify(@stats)
-      
-      super
 
     soundHandler: ->
       super
       Mediator.on 'change:score:error', (e) => createjs.Sound.play("error")
+      
+      Mediator.on 'game:strike:on:success', ->
+        createjs.Sound.stop()
+        createjs.Sound.play("strike")
+      
+      Mediator.on 'game:strike:off:success', ->
+        createjs.Sound.stop()
+        createjs.Sound.play("music")
       
     tickHandler: (tick) ->
       if @currentState == 'wait'

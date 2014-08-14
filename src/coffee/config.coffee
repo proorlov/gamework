@@ -61,16 +61,30 @@ define [
       {src: 'res/img/birds1.png', id: 'birds1'},
       {src: 'res/img/birds2.png', id: 'birds2'},
       
-      {src: 'res/img/car1.png', id: 'car1'},
-      {src: 'res/img/car2.png', id: 'car2'},
-      {src: 'res/img/car3.png', id: 'car3'},
-      {src: 'res/img/car4.png', id: 'car4'},
+      {src: 'res/img/cars/car1.png', id: 'car1'},
+      {src: 'res/img/cars/car2.png', id: 'car2'},
+      {src: 'res/img/cars/car3.png', id: 'car3'},
+      {src: 'res/img/cars/car4.png', id: 'car4'},
+      {src: 'res/img/cars/car5.png', id: 'car5'},
+      {src: 'res/img/cars/car6.png', id: 'car6'},
+      {src: 'res/img/cars/car7.png', id: 'car7'},
+      {src: 'res/img/cars/car8.png', id: 'car8'},
+      
+      {src: 'res/img/cars/car1l.png', id: 'car1l'},
+      {src: 'res/img/cars/car2l.png', id: 'car2l'},
+      {src: 'res/img/cars/car3l.png', id: 'car3l'},
+      {src: 'res/img/cars/car4l.png', id: 'car4l'},
+      {src: 'res/img/cars/car5l.png', id: 'car5l'},
+      {src: 'res/img/cars/car6l.png', id: 'car6l'},
+      {src: 'res/img/cars/car7l.png', id: 'car7l'},
+      {src: 'res/img/cars/car8l.png', id: 'car8l'},
       
       {src: 'res/data.json', id: 'data'},
       
       {src: 'res/sound/error_apple.wav', id: 'error'},
       {src: 'res/sound/music.wav', id: 'music'},
       {src: 'res/sound/score.wav', id: 'over'},
+      {src: 'res/sound/score.wav', id: 'strike'},
       {src: 'res/sound/right_apple.wav', id: 'success'}
     ]
   
@@ -84,10 +98,12 @@ define [
     debug: true #fps and some console logs
     needTime: true
 
-    startTime: 3*1000
+    startTime: -1*1000
     gameTime: 60*1000
-    nextWordTime: 2*1000
+    nextWordTime: 0*1000
     strike: 3*1000
+    
+    consecutive_strikes: 1
     
     points: 10
 
@@ -136,7 +152,26 @@ define [
       {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200, group: 'cars' },
       {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 13000, distance: 1200, group: 'cars' },
       {x:826, y:693, scale: 1, img: 'car3', animate: 'right', duration: 17000, distance: 1200, group: 'cars' },
-      {x:983, y:672, scale: 1, img: 'car4', animate: 'left',  duration: 16000, distance: 1200, group: 'cars' },
+      {x:983, y:672, scale: 1, img: 'car4l', animate: 'left',  duration: 16000, distance: 1200, group: 'cars' },
+      
+      {x:240, y:724, scale: 1, img: 'car7', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:-20, y:704, scale: 1, img: 'car1', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:130, y:714, scale: 1, img: 'car2', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:400, y:720, scale: 1, img: 'car6', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:350, y:704, scale: 1, img: 'car3', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:520, y:704, scale: 1, img: 'car8', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:635, y:704, scale: 1, img: 'car3', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:750, y:704, scale: 1, img: 'car4', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:870, y:700, scale: 1, img: 'car2', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:1000,y:700, scale: 1, img: 'car7', animate: 'right',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      
+      
+      {x: 30, y:672, scale: 1, img: 'car4l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:310, y:672, scale: 1, img: 'car4l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:430, y:662, scale: 1, img: 'car1l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:810, y:672, scale: 1, img: 'car5l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:980, y:672, scale: 1, img: 'car6l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
+      {x:1120, y:662, scale: 1, img: 'car1l', animate: 'left',  duration:260000, distance: 1200, group: 'cars_strike' },
       
       {x:  932, y: 330, scale: 1, img: 'billboard_3'}  
       {x:  125, y: 225, scale: 1, img: 'billboard_4'}     

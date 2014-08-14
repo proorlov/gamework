@@ -34,12 +34,12 @@ define [
       
       @target.addEventListener 'click', =>
         if @isCurrectWord()
+          @update()
           @success = true
           Mediator.trigger 'billboard:success'
           setTimeout (=>@parent.chooseCurrectItem(@)), Config.nextWordTime
         else
           @parent.chooseNotCurrectItem(@)
-        @update()
 
     undelegateEvents: ->
       @target.removeAllEventListeners()
@@ -58,7 +58,8 @@ define [
       @on 'billboard:success', =>
         @error.visible = false
         @target.removeAllEventListeners()
-        createjs.Tween.get(@profession).to({alpha: 0.5}, 400) unless @isCurrectWord()
+        if Config.nextWordTime > 400
+          createjs.Tween.get(@profession).to({alpha: 0.5}, 400) unless @isCurrectWord()
       
       Mediator.on 'billboard:success', => @dispatchEvent 'billboard:success'
       Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
@@ -66,24 +67,24 @@ define [
     
     onChangeScoreSuccess: ->
       @targetDelegateEvents()
-      createjs.Tween.get(@profession).to({alpha: 1}, 400)
+      if Config.nextWordTime > 400
+        createjs.Tween.get(@profession).to({alpha: 1}, 400)
       @error.visible = false
-      @resetStats()
+      @resetStats() if not @isCurrectWord()
       @animateMask() if @isCurrectWord()
     
     error_add: -> @stats.errors+=1
     
     update: ->
       timer = @game.gamingTime - @s_time
-      strike = if timer <= Config.strike && @stats.errors == 0 then 1 else 0
       @stats.score = @countPoint()
-      @stats.strike = strike
+      @stats.strike = @parent.isStrike()+0
       @stats.timer = timer
       @game.stats.words.push(@stats)
       @
 
     countPoint: ->
-      if @parent.consecutive_strikes >= 5
+      if @parent.isStrike()
         Config.points*2
       else
         Config.points
