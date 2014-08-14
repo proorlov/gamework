@@ -35,6 +35,7 @@ define [
       {src: 'res/sound/error_apple.wav', id: 'error'},
       {src: 'res/sound/music.wav', id: 'music'},
       {src: 'res/sound/score.wav', id: 'over'},
+      {src: 'res/sound/score.wav', id: 'strike'},
       {src: 'res/sound/right_apple.wav', id: 'success'}
     ]
   
@@ -48,7 +49,7 @@ define [
     debug: true #fps and some console logs
     needTime: true
     startTime: 3*1000
-    gameTime: 60*1000
+    gameTime: 10*1000
     
     points: 1
 
