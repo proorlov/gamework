@@ -34,16 +34,39 @@ define [
       Mediator.trigger new createjs.Event('state:change', 'wait')
 
     soundHandler: ->
-      super
+      Mediator.on 'state:change:success', =>
+        switch @currentState
+          when 'htp'
+            createjs.Sound.stop()
+            createjs.Sound.play("music", loop: -1)
+          when 'game'
+            createjs.Sound.stop()
+            if @isStrike
+              createjs.Sound.play("strike", loop: -1)
+            else
+              createjs.Sound.play("music", loop: -1)
+          when 'over'
+            createjs.Sound.stop()
+            createjs.Sound.play("over", loop: -1)
+          when 'pause'
+            createjs.Sound.stop()
+          when 'wait'
+            createjs.Sound.stop()
+        @setMute(@isMute)
+                
+      Mediator.on 'billboard:success', (e) => createjs.Sound.play("success")
+        
       Mediator.on 'change:score:error', (e) => createjs.Sound.play("error")
       
-      Mediator.on 'game:strike:on:success', ->
+      Mediator.on 'game:strike:on:success', =>
+        @isStrike = true
         createjs.Sound.stop()
-        createjs.Sound.play("strike")
+        createjs.Sound.play("strike", loop: -1)
       
-      Mediator.on 'game:strike:off:success', ->
+      Mediator.on 'game:strike:off:success', =>
+        @isStrike = false
         createjs.Sound.stop()
-        createjs.Sound.play("music")
+        createjs.Sound.play("music", loop: -1)
       
     tickHandler: (tick) ->
       if @currentState == 'wait'
@@ -88,3 +111,11 @@ define [
     ##
 
     addStrike: -> @stats.strike += 1
+    
+    setTimeout: (callback, duration) ->
+      time = @gamingTime
+      timer = setInterval (=>
+        if @gamingTime-time >= duration
+          callback()
+          clearInterval(timer) 
+      ), 100

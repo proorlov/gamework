@@ -23,23 +23,28 @@ define [
 
     targetDelegateEvents: ->
       @target.addEventListener 'mouseover', =>
-        unless @error.visible
-          @light.gotoAndPlay 'on'
-          @light_bg.visible = true
+        @lightOn() unless @error.visible
 
       @target.addEventListener 'mouseout',  =>
-        unless @success
-          @light.gotoAndPlay 'off'
-          @light_bg.visible = false
+        @lightOff() unless @success
       
       @target.addEventListener 'click', =>
         if @isCurrectWord()
+          @lightOn()
           @update()
           @success = true
           Mediator.trigger 'billboard:success'
-          setTimeout (=>@parent.chooseCurrectItem(@)), Config.nextWordTime
+          @game.setTimeout (=>@parent.chooseCurrectItem(@)), Config.nextWordTime
         else
           @parent.chooseNotCurrectItem(@)
+
+    lightOff: ->
+      @light.gotoAndPlay 'off'
+      @light_bg.visible = false
+      
+    lightOn: ->
+      @light.gotoAndPlay 'on'
+      @light_bg.visible = true
 
     undelegateEvents: ->
       @target.removeAllEventListeners()
@@ -99,6 +104,8 @@ define [
     render: ->
       @target = new createjs.Container
       @billboard = new createjs.Container
+      
+      @target.cursor = 'pointer'
       
       @profession = new createjs.Bitmap(@game.queue.getResult(@params.word.id))
       @profession.setTransform( (155-@profession.getBounds().width/2), (120-@profession.getBounds().height/2) )

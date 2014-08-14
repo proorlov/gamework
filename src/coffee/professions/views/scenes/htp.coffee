@@ -12,7 +12,7 @@ define [
     update: -> false
       
     afterShow: ->
-      setTimeout (=> @highlight()), 2000
+      @game.setTimeout (=> @highlight()), 2000
       
     paintGameObj: (params) ->
       @bbs[params.word.id] = new Billboard @, params 
@@ -40,3 +40,7 @@ define [
       
       @billboard.light.gotoAndPlay 'on'
       @billboard.light_bg.visible = true
+      
+    isStrike: -> false
+    strikeOn: -> false
+    strikeOff: -> false

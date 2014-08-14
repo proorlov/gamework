@@ -179,13 +179,11 @@ define [
       else
         @consecutive_strikes = 0
         
-      @srtikeTimer = setTimeout (=> Mediator.trigger 'game:strike:off'), Config.strike+Config.nextWordTime
+      @srtikeTimer = @game.setTimeout (=> Mediator.trigger 'game:strike:off'), Config.strike+Config.nextWordTime
       
       if @isStrike()
-        @strikeContainer.visible = true
         Mediator.trigger 'game:strike:on'
       else
-        @strikeContainer.visible = false
         Mediator.trigger 'game:strike:off'
         
     carsStrikeIn: ->
@@ -254,6 +252,7 @@ define [
     
     strikeOn: ->
       return if @strikeState
+      @strikeContainer.visible = true
       @carsOut()
       @carsStrikeIn()
       @strikeState = true
@@ -261,6 +260,7 @@ define [
       
     strikeOff: ->
       return unless @strikeState
+      @strikeContainer.visible = false
       @consecutive_strikes = 0
       @carsIn()
       @carsStrikeOut()
