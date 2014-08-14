@@ -98,12 +98,12 @@ define [
     debug: true #fps and some console logs
     needTime: true
 
-    startTime: -1*1000
+    startTime: 3*1000
     gameTime: 60*1000
-    nextWordTime: 0*1000
+    nextWordTime: 1*1000
     strike: 3*1000
     
-    consecutive_strikes: 1
+    consecutive_strikes: 3
     
     points: 10
 

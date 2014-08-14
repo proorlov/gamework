@@ -10,9 +10,9 @@ define [
   
   class Game extends SimpleGame
     
-    # constructor: ->
-      # super
-      # createjs.Sound.setMute(true)
+    constructor: ->
+      Mediator.on 'game:strike:on:success', => @addStrike()
+      super
       
     initsScenes: ->
       super
@@ -71,4 +71,20 @@ define [
       else
         @screens['htp'] = @currentScene = new @scenes['htp'] @
         Mediator.trigger new createjs.Event('state:change', 'htp')
+        
+    nextPhase: ->
+      @stats.timer = 0
+      @stats.errors = 0
+      _.each @stats.words, (word) =>
+        @stats.timer += word.timer
+        @stats.errors += word.errors
+      @stats.score = @points
+      @saveResult()
 
+    ##
+    # override
+    #      
+    saveResult: -> localStorage.setItem "result", JSON.stringify(@stats)
+    ##
+
+    addStrike: -> @stats.strike += 1

@@ -172,15 +172,15 @@ define [
         
     updateStats: ->
       clearTimeout @srtikeTimer
-      timer = @game.gamingTime - @billboard.s_time
+      timer = @billboard.timer
       strike = if timer <= Config.strike && @billboard.stats.errors == 0 then 1 else 0
       if strike
         @consecutive_strikes += strike
       else
         @consecutive_strikes = 0
         
-      @srtikeTimer = setTimeout (=> Mediator.trigger 'game:strike:off'), Config.strike
-
+      @srtikeTimer = setTimeout (=> Mediator.trigger 'game:strike:off'), Config.strike+Config.nextWordTime
+      
       if @isStrike()
         @strikeContainer.visible = true
         Mediator.trigger 'game:strike:on'
@@ -261,6 +261,7 @@ define [
       
     strikeOff: ->
       return unless @strikeState
+      @consecutive_strikes = 0
       @carsIn()
       @carsStrikeOut()
       @strikeState = false
