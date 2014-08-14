@@ -19,6 +19,7 @@ define [
     gamingTime: 0
     points: 0
     isMute: false
+    isStrike: false
     
     stats:
       strike: 0
@@ -30,6 +31,7 @@ define [
     constructor: ->
       @options = {}
       @loadOptions()
+      @sounds = {}
       
       @mediator = Mediator
       
@@ -73,9 +75,14 @@ define [
     
     start: ->
       @render()
-      @soundHandler()
+      
+      Mediator.on 'state:change:success', (e) => @soundHandler(e)
+      
       createjs.Ticker.addEventListener("tick", (tick) => @tickHandler(tick))
       Mediator.on 'state:change', (event) => @changeState(event)
+      @soundEventsDispatch()
+      @initSounds()
+      @setMute(@isMute)
       Mediator.trigger 'game:start'
       
     render: ->
@@ -93,13 +100,14 @@ define [
       @screens[@currentState].dispatchEvent 'show'
     
     changeState: (event) ->
+      prevState = @currentState
       to = event.bubbles
       return console.info "unspecified transition" if _.indexOf(@states[@currentState], to) < 0
       @screens[@currentState].dispatchEvent 'hide'
       @currentState = to
       @initCurrentScene()
       
-      Mediator.trigger new createjs.Event('state:change:success')
+      Mediator.trigger new createjs.Event('state:change:success', prevState)
   
     paintBackground: ->
       background = new createjs.Bitmap @queue.getResult("background")
@@ -177,24 +185,38 @@ define [
       Mediator.trigger new createjs.Event('change:score')
       Mediator.trigger new createjs.Event('change:score:success')
 
-    soundHandler: ->
-      Mediator.on 'state:change:success', =>
-        switch @currentState
-          when 'game'
-            createjs.Sound.stop()
-            createjs.Sound.play("music", loop: -1)
-          when 'over'
-            createjs.Sound.stop()
-            createjs.Sound.play("over", loop: -1)
-          when 'pause'
-            createjs.Sound.stop()
-          when 'wait'
-            createjs.Sound.stop()
-        @setMute(@isMute)
-                
-      Mediator.on 'change:score:success', (e) =>
-        createjs.Sound.play("success")
+    initSounds: ->
+      @sounds.music ||= createjs.Sound.play("music", loop: -1)
+      @sounds.over ||= createjs.Sound.play("over", loop: -1)
+      createjs.Sound.stop()
+
+    soundHandler: (e) ->
+      if @isTransaction 'wait', 'game', e
+        createjs.Sound.stop()
+        @sounds.music.play loop: -1
+
+      if @isTransaction 'pause', 'game', e
+        @sounds.music.play loop: -1
+
+      if @isTransaction 'game', 'pause', e
+        @sounds.music.pause()
+        @sounds.strike.pause() if _.has @sounds, 'strike'
+
+      if @isTransaction 'game', 'over', e
+        createjs.Sound.stop()
+        @sounds.over.play loop: -1
+
+      if (@isTransaction 'over', 'wait', e) or
+         (@isTransaction 'htp:success', 'wait', e)
+        createjs.Sound.stop()
         
+    soundEventsDispatch: ->
+      Mediator.on 'change:score:success', (e) => createjs.Sound.play("success")
+      Mediator.on 'change:score:error', (e) => createjs.Sound.play("error")
+      
+    isTransaction: (from, to, e) ->
+      from == e.bubbles and to == @currentState
+    
     nextPhase: ->
       @stats.strike = 0
       @stats.timer = 0
