@@ -18,23 +18,23 @@ var paths = {
 
 gulp.task('build', ['scripts', 'haml', 'sass'], function() {
   rjs({
-	baseUrl: 'public',
-	name: 'js/main',
+	baseUrl: 'public/js',
+	name: 'main',
 	out: "./build/gamework.min.js",
 	paths: {
-	    jquery: "./vendor/jquery-1.11.1.min",
-	    underscore: "./vendor/underscore-min",
-	    easel: "./vendor/easeljs-0.7.1.min",
-	    preload: "./vendor/preloadjs-0.4.1.min",
-	    sound: "./vendor/soundjs-0.5.2.min",
-	    tween: "./vendor/tweenjs-0.5.1.min",
-	    config: "./js/config",
-	    scenes: "./js/gamework/views/scenes",
-	    views: "./js/gamework/views",
-    	helpers: "./js/gamework/helpers",
-	    gamework: './js/gamework/gamework',
-	    layouts: "./js/app/layouts",
-	    game: "./js/simplegame/index"
+	    jquery: "./../vendor/jquery-1.11.1.min",
+	    underscore: "./../vendor/underscore-min",
+	    easel: "./../vendor/easeljs-0.7.1.min",
+	    preload: "./../vendor/preloadjs-0.4.1.min",
+	    sound: "./../vendor/soundjs-0.5.2.min",
+	    tween: "./../vendor/tweenjs-0.5.1.min",
+	    config: "config",
+	    scenes: "gamework/views/scenes",
+	    views: "gamework/views",
+    	helpers: "gamework/helpers",
+	    gamework: 'gamework/gamework',
+	    layouts: "app/layouts",
+	    game: "simplegame/index"
   	},
     shim: {
       jquery: {
