@@ -54,9 +54,9 @@ $ gulp
 
 ```sh
 
-$ gulp
 $ gulp build
+$ gulp uglify
 
 ```
 
-После "gulp build" будет создан gamework.min.js в директории /public/js/build.
+После "gulp uglify" будет создан gamework.min.js в директории /public/js/build.

@@ -16,7 +16,7 @@ var paths = {
   sass: ['src/scss/**/*.scss']
 };
 
-gulp.task('requirejsBuild', function() {
+gulp.task('build', ['scripts', 'haml', 'sass'], function() {
   rjs({
 	baseUrl: 'public',
 	name: 'js/main',
@@ -55,8 +55,8 @@ gulp.task('requirejsBuild', function() {
 
 gulp.task('uglify', function() {
   gulp.src('public/js/build/gamework.min.js')
-    .pipe(uglify( ))
-    .pipe(gulp.dest('public/js/uglify/'))
+    .pipe(uglify())
+    .pipe(gulp.dest('public/js/build'))
 });
 
 gulp.task('scripts', function() {
@@ -86,4 +86,3 @@ gulp.task('watch', function() {
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', ['scripts', 'haml', 'sass', 'watch']);
-gulp.task('build', ['requirejsBuild', 'uglify']);
