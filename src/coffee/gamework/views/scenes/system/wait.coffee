@@ -19,10 +19,10 @@ define [
     value: -> Math.round(@downCounter/1000)
     
     childsRender: ->
-      @countDown = new createjs.Text( @value(), "250px "+Config.font2_semibold, "#FFFFFF" )
+      @countDown = new createjs.Text( @value(), "240px "+Config.font2_semibold, "#FFFFFF" )
       @countDown.textAlign = "center"
       @countDown.textBaseline = "alphabetic"
-      @countDown.setTransform(Config.w/2, Config.h/2)
+      @countDown.setTransform(Config.w/2, Config.h/2+100)
       
       @sysScreen.addChild @countDown
     

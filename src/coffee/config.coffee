@@ -180,13 +180,13 @@ define [
       {x:  158, y: 556, scale: 1, img: 'tree1'}
       {x: 1090, y: 581, scale: 1, img: 'tree4'}
       {x:  716, y:  32, scale: 1, img: 'home4'}
-      {x:  238, y:  32, scale: 1, img: 'home2'}
+      {x:  233, y:  32, scale: 1, img: 'home2'}
       {x:  487, y: 103, scale: 1, img: 'home3'}     
       {x:  880, y: 105, scale: 1, img: 'home5'}
       
       {x:181,  y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 1200 },
       {x:   59, y: 244, scale: 1, img: 'home1'}
-      {x: 1034, y: 244, scale: 1, img: 'home6'}
+      {x: 1015, y: 244, scale: 1, img: 'home6'}
 
       {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
       {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
