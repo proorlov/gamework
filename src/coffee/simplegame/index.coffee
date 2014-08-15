@@ -3,9 +3,9 @@ define [
   'scenes/system/wait'
   'scenes/system/pause'
   'scenes/system/over'
-  'simplegame/views/scenes/htp'
+  'scenes/htp'
   'scenes/htp/success'
-  'simplegame/views/scenes/game'
+  'scenes/game'
 ], (Gamework, WaitScene, PauseScene, OverScene, HTPScene, HTPSuccessScene, GameScene) ->
   # simple Game
   
