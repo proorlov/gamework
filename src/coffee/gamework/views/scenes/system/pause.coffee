@@ -59,13 +59,14 @@ define [
       @buttons.addChild(workoutButton, replayButton, resumeButton)
       
       @sysScreen.addChild @buttons
-
-    afterShow: ->
-      createjs.Tween.get(@sysScreenA).to({x:0}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:0}, @t).call =>
-        @buttons.visible = true
-
+      
     beforeHide: ->
       @buttons.visible = false
-      createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()
+      super
+
+    callbackBeforeHide: ->
+      super
+      
+    callbackAfterShow: ->
+      super
+      @buttons.visible = true

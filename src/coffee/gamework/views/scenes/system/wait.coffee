@@ -30,8 +30,15 @@ define [
       @sysScreenA.x = 0
       @sysScreenB.x = 0
       @countDown.visible = true
+      @game.screens['game'].screen.visible = false
       @show()
 
     beforeHide: ->
       @countDown.visible = false
       super
+
+    afterShow: ->
+      _.each _.flatten(@els), (el) -> el.visible = true
+      
+    callbackAfterShow: ->
+      _.each _.flatten(@els), (el) -> el.visible = true
