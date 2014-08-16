@@ -40,18 +40,17 @@ define [
       nextButton.addChild(fon, txt)
       nextButton.setTransform(Config.w/2 - nextButton.getBounds().width/2, Config.h*0.7 - nextButton.getBounds().height/2)
       nextButton.cursor = "pointer"
-      nextButton.on "mousedown", => @game.restart()
+      nextButton.on "mousedown", =>
+        @game.restart()
+        @hide()
       
       @buttons.addChild(total, score, nextButton)
       
       @sysScreen.addChild @buttons
 
-    afterShow: ->
-      createjs.Tween.get(@sysScreenA).to({x:0}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:0}, @t).call =>
-        @buttons.visible = true
-
-    beforeHide: ->
-      @buttons.visible = false
-      createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()
+    callbackBeforeHide: ->
+      super
+      
+    callbackAfterShow: ->
+      super
+      @buttons.visible = true

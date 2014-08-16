@@ -11,17 +11,15 @@ define [
   
   class Game extends Gamework
     
-    #Override
     initStates: ->
       @states =
         'wait':  ['game']
         'game':  ['htp', 'pause', 'over']
         'htp':   ['game', 'htp:success', 'wait']
         'pause': ['game', 'wait']
-        'over':  ['game', 'wait']
+        'over':  ['game', 'wait', 'htp']
         'htp:success':  ['game', 'wait']
       
-    #Override
     initsScenes: ->
       @scenes = 
         'wait':         WaitScene

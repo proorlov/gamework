@@ -95,7 +95,7 @@ define [
     font2_bold:     "pf_beausans_prosemibold"
     font3_bold:     "pf_handbook_probold"
 
-    debug: true #fps and some console logs
+    debug: false #fps and some console logs
     needTime: true
 
     startTime: 3*1000
@@ -141,13 +141,33 @@ define [
       worker:
         color: "#5b78b4"
 
+    scenes:
+      game:[
+        'interface'
+        'trees'
+        'cars'
+        'builds'
+        'clouds'
+        'birds'
+      ]
+      system:[
+        'trees'
+        'builds'
+        'clouds'
+        'birds'
+      ]
+      htp:[
+        'interface'
+        'builds'
+      ]
+
     objects: [
-      {x:  140, y: 2,   scale: 1, img: 'cloud_top'}
-      {x:  357, y: 607, scale: 1, img: 'tree2'}
-      {x:  881, y: 566, scale: 1, img: 'tree3'}
+      {x:  140, y: 2,   scale: 1, img: 'cloud_top', group: 'interface'}
+      {x:  357, y: 607, scale: 1, img: 'tree2', group: 'trees'}
+      {x:  881, y: 566, scale: 1, img: 'tree3', group: 'trees'}
       
-      {x:  490, y:  425, scale: 1, img: 'billboard_1'}
-      {x:  45, y:  517, scale: 1, img: 'billboard_2'}
+      {x:  490, y:  425, scale: 1, img: 'billboard_1', group: 'billboards'}
+      {x:  45, y:  517, scale: 1, img: 'billboard_2', group: 'billboards'}
       
       {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200, group: 'cars' },
       {x:610, y:704, scale: 1, img: 'car2', animate: 'right', duration: 13000, distance: 1200, group: 'cars' },
@@ -173,31 +193,31 @@ define [
       {x:980, y:672, scale: 1, img: 'car6l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
       {x:1120, y:662, scale: 1, img: 'car1l', animate: 'left',  duration:260000, distance: 1200, group: 'cars_strike' },
       
-      {x:  932, y: 330, scale: 1, img: 'billboard_3'}  
-      {x:  125, y: 225, scale: 1, img: 'billboard_4'}     
-      {x:  665, y:  64, scale: 1, img: 'billboard_5'}
+      {x:  932, y: 330, scale: 1, img: 'billboard_3', group: 'billboards'}
+      {x:  125, y: 225, scale: 1, img: 'billboard_4', group: 'billboards'}
+      {x:  665, y:  64, scale: 1, img: 'billboard_5', group: 'billboards'}
       
-      {x:  158, y: 556, scale: 1, img: 'tree1'}
-      {x: 1090, y: 581, scale: 1, img: 'tree4'}
-      {x:  716, y:  32, scale: 1, img: 'home4'}
-      {x:  233, y:  32, scale: 1, img: 'home2'}
-      {x:  487, y: 103, scale: 1, img: 'home3'}     
-      {x:  880, y: 105, scale: 1, img: 'home5'}
-      
-      {x:181,  y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 1200 },
-      {x:   59, y: 244, scale: 1, img: 'home1'}
-      {x: 1015, y: 244, scale: 1, img: 'home6'}
+      {x:  158, y: 556, scale: 1, img: 'tree1', group: 'trees'}
+      {x: 1090, y: 581, scale: 1, img: 'tree4', group: 'trees'}
+      {x:  716, y:  32, scale: 1, img: 'home4', group: 'builds'}
+      {x:  233, y:  32, scale: 1, img: 'home2', group: 'builds'}
+      {x:  487, y: 103, scale: 1, img: 'home3', group: 'builds'}     
+      {x:  880, y: 105, scale: 1, img: 'home5', group: 'builds'}
 
-      {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
-      {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200 },
-      {x:227,  y:120, scale: 1, img: 'birds2', animate: 'right', duration: 25000, distance: 1200 },
+      {x:  181, y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 1200, group: 'clouds' },
+      {x:   59, y: 244, scale: 1, img: 'home1', group: 'builds'}
+      {x: 1015, y: 244, scale: 1, img: 'home6', group: 'builds'}
+
+      {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200, group: 'birds' },
+      {x:1126, y:200, scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200, group: 'birds' },
+      {x:227,  y:120, scale: 1, img: 'birds2', animate: 'right', duration: 25000, distance: 1200, group: 'birds' },
     
-      {x:-59,  y:391, scale: 0.64, img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
-      {x:122,  y:209, scale: 0.58, img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
-      {x:553,  y:61,  scale: 1,    img: 'cloud', animate: 'left', duration: 55000, distance: 1200 },
-      {x:671,  y:375, scale: 0.58, img: 'cloud', animate: 'left', duration: 35000, distance: 1200 },
-      {x:976,  y:83,  scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200 },
-      {x:1142, y:281, scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200 },
+      {x:-59,  y:391, scale: 0.64, img: 'cloud', animate: 'left', duration: 55000, distance: 1200, group: 'clouds' },
+      {x:122,  y:209, scale: 0.58, img: 'cloud', animate: 'left', duration: 55000, distance: 1200, group: 'clouds' },
+      {x:553,  y:61,  scale: 1,    img: 'cloud', animate: 'left', duration: 55000, distance: 1200, group: 'clouds' },
+      {x:671,  y:375, scale: 0.58, img: 'cloud', animate: 'left', duration: 35000, distance: 1200, group: 'clouds' },
+      {x:976,  y:83,  scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200, group: 'clouds' },
+      {x:1142, y:281, scale: 1,    img: 'cloud', animate: 'left', duration: 30000, distance: 1200, group: 'clouds' },
     ]
 
   new Config

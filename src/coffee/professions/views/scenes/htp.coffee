@@ -5,19 +5,11 @@ define [
   'professions/views/htp/billboard'
 ], (Mediator, Config, Game, Billboard) ->
   class HTPSimple extends Game
-    
-    constructor: ->
-      super
       
     update: -> false
       
     afterShow: ->
       @game.setTimeout (=> @highlight()), 2000
-      
-    paintGameObj: (params) ->
-      @bbs[params.word.id] = new Billboard @, params 
-      @bbs[params.word.id].dispatchEvent 'show'
-      @bb_container.addChildAt @bbs[params.word.id].screen, 0
       
     paitQuest: ->
       @quest = new createjs.Text "Найдите соответствующее\nслову изображение:", "18px "+Config.font2_reg, "#4C4C4C"

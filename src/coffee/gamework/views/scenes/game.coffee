@@ -100,3 +100,7 @@ define [
       @timeCircle.graphics.beginFill("#FFFFFF").drawCircle(73, 73, 38).endFill()
       @timeCircle.graphics.setStrokeStyle(16).beginStroke("#FBFBFB").arc(73, 73, 60, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * time / Config.gameTime)
       @timeCircle.updateCache()
+
+    show: -> @afterShow()
+
+    hide: -> @afterHide()

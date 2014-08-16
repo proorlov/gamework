@@ -60,7 +60,7 @@ define [
         'game':  ['htp', 'pause', 'over']
         'htp':   ['game', 'htp:success', 'wait']
         'pause': ['game', 'wait']
-        'over':  ['game', 'wait']
+        'over':  ['game', 'wait', 'htp']
         'htp:success':  ['game', 'wait']
       
     #Override
@@ -74,6 +74,8 @@ define [
         'over':         OverScene
     
     start: ->
+      @screens['game'] ||= new @scenes['game'] @
+      
       @render()
       
       Mediator.on 'state:change:success', (e) => @soundHandler(e)

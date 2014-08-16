@@ -33,17 +33,24 @@ define [
       @playButton.addChild fon, playButtonTxt
       @playButton.setTransform Config.w/2 - 160, Config.h/2+120
       @playButton.cursor = "pointer"
-      @playButton.on "mousedown", => @game.restart()
+      @playButton.on "mousedown", =>
+        @game.restart()
+        @hide()
       
       @container.addChild(title, txt, @playButton)
       
       @sysScreen.addChild @container
-      
-    afterShow: ->
-      createjs.Tween.get(@sysScreenA).to({x:0}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:0}, @t).call => @container.visible = true
+
+    beforeShow: ->
+      _.each _.flatten(@els), (el) -> el.visible = true
+      super
+
+    callbackAfterShow: ->
+      @game.screens['game'].screen.visible = false
+      @container.visible = true
 
     beforeHide: ->
       @container.visible = false
+      _.each _.flatten(@els), (el) -> el.visible = false
       createjs.Tween.get(@sysScreenA).to({x:-Config.w2/2}, @t)
-      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @hide()
+      createjs.Tween.get(@sysScreenB).to({x:Config.w2/2}, @t).call => @callbackBeforeHide()
