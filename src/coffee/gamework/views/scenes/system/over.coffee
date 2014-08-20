@@ -15,36 +15,40 @@ define [
       @score.text = "#{@game.points} points"
     
     childsRender: ->
-      total = new createjs.Text("Total score:", "120px "+Config.font2_bold, "#F1F1F1")
+      textContainer = new createjs.Container
+      
+      total = new createjs.Text("Total score:", "124px "+Config.font2_bold, "#F1F1F1")
       total.textAlign = "center"
       total.textBaseline = "alphabetic"
-      total.setTransform(Config.w/2, 300)
+      total.setTransform(Config.w/2, 250)
       
       @score = score = new createjs.Text("#{@game.points} points", "120px "+Config.font2_thin, "#F1F1F1")
       score.textAlign = "center"
       score.textBaseline = "alphabetic"
-      score.setTransform(Config.w/2, 420)
+      score.setTransform(Config.w/2, 365)
+      
+      textContainer.addChild total, @score
+      textContainer.setTransform 0, 90
       
       @buttons = new createjs.Container
       
       nextButton = new createjs.Container
       
-      fon = new createjs.Bitmap(@game.queue.getResult("button"))
+      fon = new createjs.Bitmap(@game.queue.getResult("button_next"))
       
       txt = new createjs.Text("NEXT", "30px "+Config.font2_reg, "#4A4A4A")
-      txt.lineWidth = 327
       txt.textAlign = "center"
       txt.textBaseline = "alphabetic"
-      txt.setTransform(163, 47)
+      txt.setTransform(100, 47)
       
       nextButton.addChild(fon, txt)
-      nextButton.setTransform(Config.w/2 - nextButton.getBounds().width/2, Config.h*0.7 - nextButton.getBounds().height/2)
+      nextButton.setTransform Config.w/2 - nextButton.getBounds().width/2, 550
       nextButton.cursor = "pointer"
       nextButton.on "mousedown", =>
         @game.restart()
         @hide()
       
-      @buttons.addChild(total, score, nextButton)
+      @buttons.addChild textContainer, nextButton
       
       @sysScreen.addChild @buttons
 
