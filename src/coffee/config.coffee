@@ -13,6 +13,7 @@ define [
       {src: 'res/img/bg.jpg', id: 'background'},
       {src: 'res/img/button.png', id: 'button'},
       {src: 'res/img/button_green.png', id: 'button_green'},
+      {src: 'res/img/button_next.png', id: 'button_next'},
       {src: 'res/img/home1.png', id: 'home1'},
       {src: 'res/img/home2.png', id: 'home2'},
       {src: 'res/img/home3.png', id: 'home3'},

@@ -21,7 +21,7 @@ define [
       txt.setTransform(163, 47)
       
       workoutButton.addChild(fon, txt)
-      workoutButton.setTransform(100, Config.h/2 - workoutButton.getBounds().height/2)
+      workoutButton.setTransform 100, 0
       workoutButton.cursor = "pointer"
       workoutButton.on "mousedown", => console.log("back to workout")
 
@@ -35,7 +35,7 @@ define [
       txt.setTransform(163, 47)
       
       replayButton.addChild(fon, txt)
-      replayButton.setTransform(Config.w/2 - replayButton.getBounds().width/2, Config.h/2 - replayButton.getBounds().height/2)
+      replayButton.setTransform Config.w/2 - replayButton.getBounds().width/2, 0
       replayButton.cursor = "pointer"
       replayButton.on "mousedown", =>
         @game.restart()
@@ -51,12 +51,14 @@ define [
       txt.setTransform(163, 47)
       
       resumeButton.addChild(fon, txt)
-      resumeButton.setTransform(Config.w - 429, Config.h/2 - resumeButton.getBounds().height/2)
+      resumeButton.setTransform Config.w - 429, 0
       resumeButton.cursor = "pointer"
       resumeButton.on "mousedown", => @game.pause()
       
       @buttons.visible = false
       @buttons.addChild(workoutButton, replayButton, resumeButton)
+      
+      @buttons.setTransform 0, 353
       
       @sysScreen.addChild @buttons
       
