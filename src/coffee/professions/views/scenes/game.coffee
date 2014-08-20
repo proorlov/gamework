@@ -15,18 +15,29 @@ define [
     
     billboards:
       [
-        { x:  502, y: 440, scaleX: 1, scaleY: 1 },
+        { x:  507, y: 440, scaleX: 1, scaleY: 1 },
         { x:  53,  y: 529, scaleX: 0.8, scaleY: 0.8 },
         { x:  942, y: 342, scaleX: 0.833, scaleY: 0.833 },
         { x:  135, y: 239, scaleX: 0.926, scaleY: 0.926 },     
         { x:  675, y:  76, scaleX: 0.8, scaleY: 0.805 },
       ]
     
-    constructor: ->
+    constructor: (parent) ->
+      @currentWords = {}
       @bbs = {}
       @objs_groups = {}
-      @quests = gamework.queue.getResult('data').quests
-      super
+      @quests = _.clone(gamework.queue.getResult('data').quests)
+      
+      @screen = new createjs.Container
+      @screen.visible = @visible
+      @parent = parent
+      @game = gamework
+      @parent.screen.addChildAt @screen, 0
+      @render()
+      @delegateEvents()
+      
+      @on 'show', => @showPerformer()
+      @on 'hide', => @hidePerformer()
     
     undelegateEvents: ->
       @removeAllEventListeners()
@@ -132,15 +143,15 @@ define [
       Mediator.trigger 'next:phase'
       
     paitQuest: ->
-      @quest = new createjs.Text @quests.quest, "23px "+Config.font2_reg, "#4C4C4C"
+      @quest = new createjs.Text @quests.quest, "22px "+Config.font2_bold, "#2d2d2d"
       @quest.textAlign = "left"
       @quest.textBaseline = "alphabetic"
-      @quest.setTransform 225, 100
+      @quest.setTransform 225, 109
       
-      @word = new createjs.Text @currentWord.name, "35px "+Config.font2_reg, "#4C4C4C" 
+      @word = new createjs.Text @currentWord.name, "40px "+Config.font2_bold, "#2d2d2d" 
       @word.textAlign = "left"
       @word.textBaseline = "alphabetic"
-      @word.setTransform 225, 150
+      @word.setTransform 225, 155
       
       @screen.addChild(@quest, @word)
     

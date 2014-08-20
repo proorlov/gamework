@@ -64,7 +64,7 @@ define [
         @error.visible = false
         @target.removeAllEventListeners()
         if Config.nextWordTime > 400
-          createjs.Tween.get(@profession).to({alpha: 0.5}, 400) unless @isCurrectWord()
+          createjs.Tween.get(@profession).to({alpha: 0.3}, 400) unless @isCurrectWord()
       
       Mediator.on 'billboard:success', => @dispatchEvent 'billboard:success'
       Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
@@ -106,7 +106,6 @@ define [
       @billboard = new createjs.Container
       
       @target.cursor = 'pointer'
-      
       @profession = new createjs.Bitmap(@game.queue.getResult(@params.word.id))
       @profession.setTransform( (155-@profession.getBounds().width/2), (120-@profession.getBounds().height/2) )
       
@@ -128,7 +127,7 @@ define [
       @error.visible = false
       
       @target.setTransform @params.position.x, @params.position.y, @params.position.scaleX, @params.position.scaleY
-      @light.setTransform 0, 170
+      @light.setTransform 0, 174
       
       @billboard.addChild @bg, @light_bg, @profession
       @target.addChild @billboard, @error, @light

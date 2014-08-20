@@ -9,6 +9,15 @@ define [
     w2: Config::w - Config::borderSize
     h2: Config::h - Config::borderSize
     
+    htp:
+      word: {id: 'policeman', name: 'Policeman'}
+      words:[
+        {id: 'doctor', name: 'Doctor'}
+        {id: 'adiner', name: 'Adiner'}
+        {id: 'driver', name: 'Driver'}
+        {id: 'lawyer', name: 'Lawyer'}
+      ]
+    
     manifest: [
       {src: 'res/img/bg.jpg', id: 'background'},
       
@@ -98,7 +107,7 @@ define [
     debug: false #fps and some console logs
     needTime: true
 
-    startTime: 3*1000
+    startTime: 0*1000
     gameTime: 60*1000
     nextWordTime: 1*1000
     strike: 3*1000
@@ -149,6 +158,7 @@ define [
         'builds'
         'clouds'
         'birds'
+        'billboards'
       ]
       system:[
         'trees'
@@ -158,6 +168,7 @@ define [
       ]
       htp:[
         'interface'
+        'billboards'
         'builds'
       ]
 
@@ -166,7 +177,7 @@ define [
       {x:  357, y: 607, scale: 1, img: 'tree2', group: 'trees'}
       {x:  881, y: 566, scale: 1, img: 'tree3', group: 'trees'}
       
-      {x:  490, y:  425, scale: 1, img: 'billboard_1', group: 'billboards'}
+      {x:  495, y:  425, scale: 1, img: 'billboard_1', group: 'billboards'}
       {x:  45, y:  517, scale: 1, img: 'billboard_2', group: 'billboards'}
       
       {x:445, y:704, scale: 1, img: 'car1', animate: 'right', duration: 15000, distance: 1200, group: 'cars' },
@@ -193,19 +204,19 @@ define [
       {x:980, y:672, scale: 1, img: 'car6l', animate: 'left',  duration: 260000, distance: 1200, group: 'cars_strike' },
       {x:1120, y:662, scale: 1, img: 'car1l', animate: 'left',  duration:260000, distance: 1200, group: 'cars_strike' },
       
-      {x:  932, y: 330, scale: 1, img: 'billboard_3', group: 'billboards'}
+      {x:  933, y: 330, scale: 1, img: 'billboard_3', group: 'billboards'}
       {x:  125, y: 225, scale: 1, img: 'billboard_4', group: 'billboards'}
       {x:  665, y:  64, scale: 1, img: 'billboard_5', group: 'billboards'}
       
       {x:  158, y: 556, scale: 1, img: 'tree1', group: 'trees'}
       {x: 1090, y: 581, scale: 1, img: 'tree4', group: 'trees'}
       {x:  716, y:  32, scale: 1, img: 'home4', group: 'builds'}
-      {x:  233, y:  32, scale: 1, img: 'home2', group: 'builds'}
-      {x:  487, y: 103, scale: 1, img: 'home3', group: 'builds'}     
+      {x:  240, y:  35, scale: 1, img: 'home2', group: 'builds'}
+      {x:  486, y: 103, scale: 1, img: 'home3', group: 'builds'}     
       {x:  880, y: 105, scale: 1, img: 'home5', group: 'builds'}
 
       {x:  181, y:303, scale: 0.73, img: 'cloud', animate: 'left', duration: 32000, distance: 1200, group: 'clouds' },
-      {x:   59, y: 244, scale: 1, img: 'home1', group: 'builds'}
+      {x:   64, y: 244, scale: 1, img: 'home1', group: 'builds'}
       {x: 1015, y: 244, scale: 1, img: 'home6', group: 'builds'}
 
       {x:522,  y:30,  scale: 1, img: 'birds1', animate: 'right', duration: 25000, distance: 1200, group: 'birds' },

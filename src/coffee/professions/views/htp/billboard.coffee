@@ -13,10 +13,9 @@ define [
       Mediator.on 'change:score:success', => @dispatchEvent 'change:score:success'
       Mediator.on 'change:score:error', => @dispatchEvent 'change:score:error'
       
+      @target.addEventListener 'mouseover', => @lightOn()
+      @target.addEventListener 'mouseout',  => @lightOff()
+      
       @target.addEventListener 'click', =>
-        if @isCurrectWord()
-          Mediator.trigger new createjs.Event('state:change', 'htp:success')
-        else
-          Mediator.trigger new createjs.Event('change:score:error')
-          @error.visible = true
+        Mediator.trigger new createjs.Event('state:change', 'htp:success') if @isCurrectWord()
           
